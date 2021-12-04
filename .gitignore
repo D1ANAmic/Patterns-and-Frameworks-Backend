@@ -45,3 +45,5 @@ src/main/resources/application.properties
 
 #Maven files
 .mvn/
+mvnw
+mvnw.cmd
