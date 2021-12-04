@@ -18,6 +18,11 @@ public class PlayerController {
     @Autowired // inject PlayerRepository bean
     PlayerRepository playerRepository;
 
+    @RequestMapping("/")
+    public String message() {
+        return "It's working!";
+    }
+
     @GetMapping("/players")
     public ResponseEntity<List<Player>> getAllPlayers (@RequestParam(required = false) String name){
         try {
