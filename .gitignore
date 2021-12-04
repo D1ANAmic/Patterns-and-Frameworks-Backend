@@ -43,3 +43,5 @@ target/
 # Application properties
 src/main/resources/application.properties
 
+#Maven files
+.mvn/
