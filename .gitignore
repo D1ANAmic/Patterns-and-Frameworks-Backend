@@ -39,3 +39,7 @@ target/
 
 # Apple Desktop Services Store
 .DS_Store
+
+# Application properties
+src/main/resources/application.properties
+
