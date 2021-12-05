@@ -1,0 +1,12 @@
+# specify database access
+spring.datasource.url=jdbc:postgresql://localhost:5432/frisbee
+spring.datasource.username=frisbee
+spring.datasource.password=frisbee
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+spring.sql.init.mode=always
+
+spring.jpa.hibernate.ddl-auto=update
+
+spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
+spring.jpa.properties.hibernate.dialect= org.hibernate.dialect.PostgreSQLDialect
