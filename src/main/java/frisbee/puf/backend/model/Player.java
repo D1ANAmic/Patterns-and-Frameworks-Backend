@@ -13,6 +13,15 @@ public class Player {
     @Column (name = "name")
     private String name;
 
+    @Column (name = "email")
+    private String email;
+
+    @Column (name = "password")
+    private String password;
+
+    @Column (name = "isLoggedIn")
+    private boolean isLoggedIn;
+
     public Player() {
     }
 
