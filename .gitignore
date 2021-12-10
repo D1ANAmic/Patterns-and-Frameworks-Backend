@@ -27,7 +27,7 @@ hs_err_pid*
 
 # IDE files IntelliJ
 .idea/*
-frontend.iml
+*.iml
 
 # IDE files Eclipse
 .classpath
@@ -39,3 +39,11 @@ target/
 
 # Apple Desktop Services Store
 .DS_Store
+
+# Application properties
+src/main/resources/application.properties
+
+#Maven files
+.mvn/
+mvnw
+mvnw.cmd
