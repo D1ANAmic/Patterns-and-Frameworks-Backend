@@ -39,7 +39,7 @@ public class PlayerController {
     @PostMapping("/players")
     public ResponseEntity<Player> createPlayer (@RequestBody Player player) {
         try {
-            Player newPlayer = playerRepository.save(new Player(player.getName()));
+            Player newPlayer = playerRepository.save(new Player(player.getName(), player.getEmail(), player.getPassword(), player.isLoggedIn()));
             return new ResponseEntity<>(newPlayer, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

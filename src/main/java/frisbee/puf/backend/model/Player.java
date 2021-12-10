@@ -1,9 +1,14 @@
 package frisbee.puf.backend.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
 @Table (name= "players")
+@Setter
+@Getter
 public class Player {
 
     @Id
@@ -25,8 +30,12 @@ public class Player {
     public Player() {
     }
 
-    public Player(String name) {
+    public Player(String name, String email, String password, boolean isLoggedIn) {
+
         this.name = name;
+        this.email = email;
+        this.password = password;
+        this.isLoggedIn = isLoggedIn;
     }
 
     public long getId() {
