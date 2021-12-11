@@ -55,6 +55,9 @@ public class Player {
         return "Player{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", isLoggedIn=" + isLoggedIn +
                 '}';
     }
 }
