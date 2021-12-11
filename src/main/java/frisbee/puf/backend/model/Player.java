@@ -12,7 +12,8 @@ import javax.persistence.*;
 public class Player {
 
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
     @Column (name = "name")
     private String name;
