@@ -24,18 +24,14 @@ public class Player {
     @Column (name = "password")
     private String password;
 
-    @Column (name = "isLoggedIn")
-    private boolean isLoggedIn;
-
     public Player() {
     }
 
-    public Player(String name, String email, String password, boolean isLoggedIn) {
+    public Player(String name, String email, String password) {
 
         this.name = name;
         this.email = email;
         this.password = password;
-        this.isLoggedIn = isLoggedIn;
     }
 
     public long getId() {
@@ -50,14 +46,4 @@ public class Player {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "Player{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", isLoggedIn=" + isLoggedIn +
-                '}';
-    }
 }

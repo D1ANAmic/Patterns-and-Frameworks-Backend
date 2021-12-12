@@ -64,36 +64,6 @@ public class PlayerController {
         return new ResponseEntity<>(newPlayer, HttpStatus.CREATED);
     }
 
-    @PostMapping("/players/login")
-    public ResponseEntity<Player>  loginPlayer(@RequestBody Player player) {
-        List<Player> players = playerRepository.findAll();
-
-        for (Player other : players) {
-            if (other.getEmail().equals(player.getEmail()) && other.getPassword().equals(player.getPassword())) {
-                other.setLoggedIn(true);
-                playerRepository.save(other);
-                return new ResponseEntity<>(other, HttpStatus.OK);
-            }
-        }
-        System.out.println("Login failed!");
-        return new ResponseEntity<>(player, HttpStatus.BAD_REQUEST);
-    }
-
-    @PostMapping("/players/logout")
-    public ResponseEntity<Player> logoutPlayer(@RequestBody Player player) {
-        List<Player> players = playerRepository.findAll();
-
-        for (Player other : players) {
-            if (other.getEmail().equals(player.getEmail())) {
-                other.setLoggedIn(false);
-                playerRepository.save(other);
-                return new ResponseEntity<>(other, HttpStatus.OK);
-            }
-        }
-
-        System.out.println("Logout failed!");
-        return new ResponseEntity<>(player, HttpStatus.BAD_REQUEST);
-    }
 
     @DeleteMapping("/players/delete-all")
     public ResponseEntity<Player> deletePlayers() {
