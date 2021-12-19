@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -36,16 +35,6 @@ public class PlayerController {
         }
     }
 
-    @PostMapping("/players")
-    public ResponseEntity<Player> createPlayer (@RequestBody Player player) {
-        try {
-            Player newPlayer = playerRepository.save(new Player(player.getName()));
-            return new ResponseEntity<>(newPlayer, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @GetMapping("/players/{id}")
     public ResponseEntity<Player> getTutorialById(@PathVariable("id") long id) {
         Optional<Player> playerData = playerRepository.findById(id);
@@ -55,5 +44,31 @@ public class PlayerController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+
+    @PostMapping("/players/register")
+    public ResponseEntity<Player> registerPlayer(@RequestBody Player newPlayer) {
+        List<Player> players = playerRepository.findAll();
+
+        for (Player player : players) {
+            System.out.println("Registered player: " + player.toString());
+
+            if (player.getEmail().equals(newPlayer.getEmail())) {
+                System.out.println("Player already exists!");
+                return new ResponseEntity<>(newPlayer, HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        playerRepository.save(newPlayer);
+        return new ResponseEntity<>(newPlayer, HttpStatus.CREATED);
+    }
+
+
+    @DeleteMapping("/players/delete-all")
+    public ResponseEntity<Player> deletePlayers() {
+        playerRepository.deleteAll();
+        System.out.println("All players deleted!");
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

@@ -41,7 +41,7 @@ target/
 .DS_Store
 
 # Application properties
-src/main/resources/application.properties
+# src/main/resources/application.properties
 
 #Maven files
 .mvn/

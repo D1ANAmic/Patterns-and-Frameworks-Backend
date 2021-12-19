@@ -1,9 +1,14 @@
 package frisbee.puf.backend.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
 @Table (name= "players")
+@Setter
+@Getter
 public class Player {
 
     @Id
@@ -13,11 +18,20 @@ public class Player {
     @Column (name = "name")
     private String name;
 
+    @Column (name = "email")
+    private String email;
+
+    @Column (name = "password")
+    private String password;
+
     public Player() {
     }
 
-    public Player(String name) {
+    public Player(String name, String email, String password) {
+
         this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
     public long getId() {
@@ -32,11 +46,4 @@ public class Player {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "Player{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }
