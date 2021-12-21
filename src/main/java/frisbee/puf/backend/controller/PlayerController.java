@@ -51,4 +51,12 @@ public class PlayerController {
         this.playerService.deleteAllPlayers();
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PutMapping("/players/{playerId}")
+    public void updatePlayer(
+            @PathVariable("playerId") long playerId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email) {
+        this.playerService.updatePlayer(playerId, name, email);
+    }
 }

@@ -4,9 +4,12 @@ import frisbee.puf.backend.model.Player;
 import frisbee.puf.backend.repository.PlayerRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class PlayerService {
@@ -54,6 +57,22 @@ public class PlayerService {
     public void deleteAllPlayers(){
         this.playerRepository.deleteAll();
         System.out.println("All players deleted!");
+    }
+
+    @Transactional
+    public void updatePlayer(long playerId, String name, String email) {
+        Player player = this.playerRepository.findById(playerId).orElseThrow(
+                () -> new IllegalStateException("Player with ID '" + playerId + "' does not exist."));
+        if (name != null && name.length() > 0 && !Objects.equals(player.getName(), name)) {
+            player.setName(name);
+        }
+        if (email != null && email.length() > 0 && !Objects.equals(player.getEmail(), email)) {
+            Optional<Player> playerOptional = this.playerRepository.findPlayerByEmail(email);
+            if (playerOptional.isPresent()) {
+                throw new IllegalStateException("Email is taken.");
+            }
+            player.setEmail(email);
+        }
     }
 
 }
