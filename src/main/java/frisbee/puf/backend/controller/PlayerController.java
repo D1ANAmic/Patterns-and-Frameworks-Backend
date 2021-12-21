@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin // configure allowed origins
@@ -62,6 +63,19 @@ public class PlayerController {
 
         playerRepository.save(newPlayer);
         return new ResponseEntity<>(newPlayer, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/players/login")
+    public ResponseEntity<Player>  loginPlayer(@RequestBody Map<String, String> credentials) {
+        List<Player> players = playerRepository.findAll();
+
+        for (Player player : players) {
+            if (player.getEmail().equals(credentials.get("email")) && player.getPassword().equals(credentials.get("password"))) {
+                return new ResponseEntity<>(player, HttpStatus.OK);
+            }
+        }
+        System.out.println("Login failed!");
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 
