@@ -60,19 +60,13 @@ public class PlayerService {
     }
 
     @Transactional
-    public void updatePlayer(long playerId, String name, String email) {
-        Player player = this.playerRepository.findById(playerId).orElseThrow(
-                () -> new IllegalStateException("Player with ID '" + playerId + "' does not exist."));
-        if (name != null && name.length() > 0 && !Objects.equals(player.getName(), name)) {
-            player.setName(name);
+    public Player updatePlayerName(String email, String newName) {
+        Player currentPlayer = playerRepository.findByEmail(email);
+        System.out.println("CURRENT PLAYERS NAME: " + currentPlayer.getName());
+        if (newName != null && newName.length() > 0 && !Objects.equals(currentPlayer.getName(), newName)) {
+            currentPlayer.setName(newName);
         }
-        if (email != null && email.length() > 0 && !Objects.equals(player.getEmail(), email)) {
-            Optional<Player> playerOptional = this.playerRepository.findPlayerByEmail(email);
-            if (playerOptional.isPresent()) {
-                throw new IllegalStateException("Email is taken.");
-            }
-            player.setEmail(email);
-        }
+        return this.playerRepository.save(currentPlayer);
     }
 
 }

@@ -52,11 +52,11 @@ public class PlayerController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/players/{playerId}")
-    public void updatePlayer(
-            @PathVariable("playerId") long playerId,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String email) {
-        this.playerService.updatePlayer(playerId, name, email);
+    @PutMapping("/players/update-player-name/{email}")
+    public ResponseEntity updatePlayerName(@PathVariable("email") String email, @RequestBody String newName) {
+
+        Player updatedPlayer = this.playerService.updatePlayerName(email, newName);
+        HttpStatus httpStatus = updatedPlayer == null? HttpStatus.BAD_REQUEST : HttpStatus.OK;
+        return new ResponseEntity<>(updatedPlayer, httpStatus);
     }
 }
