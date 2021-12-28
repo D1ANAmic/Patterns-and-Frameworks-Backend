@@ -4,12 +4,10 @@ import frisbee.puf.backend.model.Player;
 import frisbee.puf.backend.repository.PlayerRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class PlayerService {
@@ -51,7 +49,6 @@ public class PlayerService {
             System.out.println("Login failed!");
             return null;
         }
-
     }
 
     public void deleteAllPlayers(){
@@ -59,7 +56,6 @@ public class PlayerService {
         System.out.println("All players deleted!");
     }
 
-    @Transactional
     public Player updatePlayerName(String email, String newName) {
         Player currentPlayer = playerRepository.findByEmail(email);
         System.out.println("CURRENT PLAYERS NAME: " + currentPlayer.getName());
