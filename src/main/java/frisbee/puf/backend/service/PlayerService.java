@@ -61,8 +61,11 @@ public class PlayerService {
         System.out.println("CURRENT PLAYERS NAME: " + currentPlayer.getName());
         if (newName != null && newName.length() > 0 && !Objects.equals(currentPlayer.getName(), newName)) {
             currentPlayer.setName(newName);
+            return this.playerRepository.save(currentPlayer);
+        } else {
+            System.out.println("Name can not be modified!");
+            return null;
         }
-        return this.playerRepository.save(currentPlayer);
     }
 
 }
