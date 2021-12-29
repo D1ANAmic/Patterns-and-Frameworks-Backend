@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class PlayerService {
@@ -48,12 +49,23 @@ public class PlayerService {
             System.out.println("Login failed!");
             return null;
         }
-
     }
 
     public void deleteAllPlayers(){
         this.playerRepository.deleteAll();
         System.out.println("All players deleted!");
+    }
+
+    public Player updatePlayerName(String email, String newName) {
+        Player currentPlayer = playerRepository.findByEmail(email);
+        System.out.println("CURRENT PLAYERS NAME: " + currentPlayer.getName());
+        if (newName != null && newName.length() > 0 && !Objects.equals(currentPlayer.getName(), newName)) {
+            currentPlayer.setName(newName);
+            return this.playerRepository.save(currentPlayer);
+        } else {
+            System.out.println("Name can not be modified!");
+            return null;
+        }
     }
 
 }

@@ -10,5 +10,4 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     @Query("select p from Player p where p.email = ?1")
     Player findByEmail(String email);
-
 }

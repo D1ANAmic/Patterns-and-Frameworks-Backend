@@ -51,4 +51,12 @@ public class PlayerController {
         this.playerService.deleteAllPlayers();
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PutMapping("/players/update-player-name/{email}")
+    public ResponseEntity updatePlayerName(@PathVariable("email") String email, @RequestBody String newName) {
+
+        Player updatedPlayer = this.playerService.updatePlayerName(email, newName);
+        HttpStatus httpStatus = updatedPlayer == null? HttpStatus.BAD_REQUEST : HttpStatus.OK;
+        return new ResponseEntity<>(updatedPlayer, httpStatus);
+    }
 }
