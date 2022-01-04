@@ -6,6 +6,7 @@ import frisbee.puf.backend.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class TeamService {
@@ -17,26 +18,42 @@ public class TeamService {
         this.playerService = playerService;
     }
 
+    /**
+     * Returns all teams saved in the database.
+     * @return list of all teams
+     */
     public List<Team> getAllTeams(){
         return this.teamRepository.findAll();
     }
 
-    public Team getTeamByName(String name){
+    /**
+     * Gets a team by name and returns it.
+     * @param name of the team
+     * @return Team object
+     * @throws NoSuchElementException when team is not found
+     */
+    public Team getTeamByName(String name) throws NoSuchElementException {
         List<Team> teams = this.teamRepository.findByName(name);
         if (teams.isEmpty()) {
             System.out.println("Team does not exist.");
-            return null;
+            throw new NoSuchElementException("Team does not exist.");
         }
 
         // return first team found, since there should not be more than one with the same name
         return teams.get(0);
     }
 
-    public Team createTeam(String name) {
+    /**
+     * Creates a new team and returns it.
+     * @param name name of team
+     * @return created team object
+     * @throws IllegalArgumentException if team name already exists
+     */
+    public Team createTeam(String name) throws IllegalArgumentException {
         List<Team> existingTeams = this.teamRepository.findByName(name);
         if (!existingTeams.isEmpty()) {
             System.out.println("Team already exists.");
-            return null;
+            throw new IllegalArgumentException("Team already exists.");
         }
 
         // initialize with default values
@@ -49,23 +66,22 @@ public class TeamService {
         return this.teamRepository.save(newTeam);
     }
 
-    public Team joinTeam(String teamName, String playerEmail) {
+    /**
+     * Adds a player to a team.
+     * @param teamName name of the team
+     * @param playerEmail email adress of the player
+     * @return the updated team object
+     * @throws NoSuchElementException if the team or player do not exist
+     * @throws IllegalArgumentException if the player is already in the team or the team is full
+     */
+    public Team joinTeam(String teamName, String playerEmail) throws NoSuchElementException, IllegalArgumentException {
         Team team = this.getTeamByName(teamName);
-        if (team == null) {
-            System.out.println("Team does not exist.");
-            return null;
-        }
-
         Player player = this.playerService.getPlayerByEmail(playerEmail);
-        if (player == null) {
-            System.out.println("Player does not exist.");
-            return null;
-        }
 
         if ((team.getPlayerLeft() != null && team.getPlayerLeft().equals(player)) ||
                 (team.getPlayerRight() != null && team.getPlayerRight().equals(player))) {
             System.out.println("Player already in team.");
-            return null;
+            throw new IllegalArgumentException("Player is already in the team.");
         }
 
         // fill up places
@@ -78,16 +94,21 @@ public class TeamService {
         } else {
             // all places already taken
             System.out.println("Team already full.");
-            return null;
+            throw new IllegalArgumentException("Team is already full.");
         }
     }
 
-    public Team updateTeam(String name, int level, int score, int lives) {
+    /**
+     * Updates a team with given parameters.
+     * @param name name of the team
+     * @param level new level of the team
+     * @param score new score of the team
+     * @param lives new remaining lives of the team
+     * @return the updated team object
+     * @throws NoSuchElementException if team was not found
+     */
+    public Team updateTeam(String name, int level, int score, int lives) throws NoSuchElementException {
         Team team = this.getTeamByName(name);
-        if (team == null) {
-            System.out.println("Team does not exist.");
-            return null;
-        }
 
         team.setLevel(level);
         team.setScore(score);

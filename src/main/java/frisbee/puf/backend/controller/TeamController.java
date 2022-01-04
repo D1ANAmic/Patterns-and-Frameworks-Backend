@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @CrossOrigin
 @RestController
@@ -27,41 +28,50 @@ public class TeamController {
     }
 
     @GetMapping("/teams/{name}")
-    public ResponseEntity<Team> getTeamByName(@PathVariable("name") String name){
-
-        Team team = this.teamService.getTeamByName(name);
-        HttpStatus httpStatus = team == null ? HttpStatus.NO_CONTENT : HttpStatus.OK;
-        return new ResponseEntity<>(team, httpStatus);
+    public ResponseEntity<?> getTeamByName(@PathVariable("name") String name){
+        try {
+            Team team = this.teamService.getTeamByName(name);
+            return new ResponseEntity<>(team, HttpStatus.OK);
+        } catch(NoSuchElementException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/teams/create")
-    public ResponseEntity<Team> createTeam(@RequestBody String name) {
-        Team team = this.teamService.createTeam(name);
-        HttpStatus httpStatus = team == null ? HttpStatus.BAD_REQUEST : HttpStatus.CREATED;
-        return new ResponseEntity<>(team, httpStatus);
+    public ResponseEntity<?> createTeam(@RequestBody String name) {
+        try {
+            Team team = this.teamService.createTeam(name);
+            return new ResponseEntity<>(team, HttpStatus.CREATED);
+        } catch (IllegalArgumentException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/teams/join")
-    public ResponseEntity<Team> joinTeam(@RequestBody ObjectNode objectNode) {
+    public ResponseEntity<?> joinTeam(@RequestBody ObjectNode objectNode) {
         String teamName = objectNode.get("teamName").asText();
         String playerEmail = objectNode.get("playerEmail").asText();
 
-        Team team = this.teamService.joinTeam(teamName, playerEmail);
-        HttpStatus httpStatus = team == null ? HttpStatus.BAD_REQUEST : HttpStatus.CREATED;
-        return new ResponseEntity<>(team, httpStatus);
+        try {
+            Team team = this.teamService.joinTeam(teamName, playerEmail);
+            return new ResponseEntity<>(team, HttpStatus.CREATED);
+        } catch(Exception exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/teams/update")
-    public ResponseEntity<Team> updateTeam(@RequestBody ObjectNode objectNode) {
+    public ResponseEntity<?> updateTeam(@RequestBody ObjectNode objectNode) {
         String name = objectNode.get("name").asText();
         int level = objectNode.get("level").asInt();
         int score = objectNode.get("score").asInt();
         int lives = objectNode.get("lives").asInt();
 
-        Team team = this.teamService.updateTeam(name, level, score, lives);
-        HttpStatus httpStatus = team == null ? HttpStatus.BAD_REQUEST : HttpStatus.CREATED;
-        return new ResponseEntity<>(team, httpStatus);
+        try {
+            Team team = this.teamService.updateTeam(name, level, score, lives);
+            return new ResponseEntity<>(team, HttpStatus.CREATED);
+        } catch(NoSuchElementException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
-
-    // TODO: update team
 }

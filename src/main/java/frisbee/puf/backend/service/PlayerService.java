@@ -24,8 +24,14 @@ public class PlayerService {
         return this.playerRepository.findAll();
     }
 
-    public Player getPlayerByEmail(String email) {
-        return this.playerRepository.findByEmail(email);
+
+    public Player getPlayerByEmail(String email) throws IllegalArgumentException {
+        Player player = this.playerRepository.findByEmail(email);
+        if (player == null) {
+            throw new IllegalArgumentException("Player with this email does not exist.");
+        }
+
+        return player;
     }
 
     public Player registerPlayer(Player newPlayer){
