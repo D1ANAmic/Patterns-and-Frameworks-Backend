@@ -18,10 +18,21 @@ public class TeamService {
         return this.teamRepository.findAll();
     }
 
+    public Team getTeamByName(String name){
+        List<Team> teams = this.teamRepository.findByName(name);
+        if (teams.isEmpty()) {
+            System.out.println("Team does not exist.");
+            return null;
+        }
+
+        // return first team found, since there should not be more than one with the same name
+        return teams.get(0);
+    }
+
     public Team createTeam(String name) {
-        List<Team> existingTeam = this.teamRepository.findByName(name);
-        if (!existingTeam.isEmpty()) {
-            System.out.println("Team already exists!");
+        List<Team> existingTeams = this.teamRepository.findByName(name);
+        if (!existingTeams.isEmpty()) {
+            System.out.println("Team already exists.");
             return null;
         }
 
