@@ -80,6 +80,18 @@ public class TeamService {
             System.out.println("Team already full.");
             return null;
         }
+    }
 
+    public Team updateTeam(String name, int level, int score, int lives) {
+        Team team = this.getTeamByName(name);
+        if (team == null) {
+            System.out.println("Team does not exist.");
+            return null;
+        }
+
+        team.setLevel(level);
+        team.setScore(score);
+        team.setLives(lives);
+        return this.teamRepository.save(team);
     }
 }

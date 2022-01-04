@@ -51,5 +51,17 @@ public class TeamController {
         return new ResponseEntity<>(team, httpStatus);
     }
 
-    // TODO: join team, update team
+    @PutMapping("/teams/update")
+    public ResponseEntity<Team> updateTeam(@RequestBody ObjectNode objectNode) {
+        String name = objectNode.get("name").asText();
+        int level = objectNode.get("level").asInt();
+        int score = objectNode.get("score").asInt();
+        int lives = objectNode.get("lives").asInt();
+
+        Team team = this.teamService.updateTeam(name, level, score, lives);
+        HttpStatus httpStatus = team == null ? HttpStatus.BAD_REQUEST : HttpStatus.CREATED;
+        return new ResponseEntity<>(team, httpStatus);
+    }
+
+    // TODO: update team
 }
