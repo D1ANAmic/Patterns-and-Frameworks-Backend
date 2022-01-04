@@ -24,6 +24,10 @@ public class PlayerService {
         return this.playerRepository.findAll();
     }
 
+    public Player getPlayerByEmail(String email) {
+        return this.playerRepository.findByEmail(email);
+    }
+
     public Player registerPlayer(Player newPlayer){
         List<Player> players = this.playerRepository.findAll();
 

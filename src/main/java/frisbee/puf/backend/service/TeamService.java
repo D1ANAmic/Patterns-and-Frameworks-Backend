@@ -1,5 +1,6 @@
 package frisbee.puf.backend.service;
 
+import frisbee.puf.backend.model.Player;
 import frisbee.puf.backend.model.Team;
 import frisbee.puf.backend.repository.TeamRepository;
 import org.springframework.stereotype.Service;
@@ -9,9 +10,11 @@ import java.util.List;
 @Service
 public class TeamService {
     TeamRepository teamRepository;
+    PlayerService playerService;
 
-    public TeamService(TeamRepository teamRepository) {
+    public TeamService(TeamRepository teamRepository, PlayerService playerService) {
         this.teamRepository = teamRepository;
+        this.playerService = playerService;
     }
 
     public List<Team> getAllTeams(){
@@ -44,5 +47,39 @@ public class TeamService {
         newTeam.setScore(0);
         //save and return
         return this.teamRepository.save(newTeam);
+    }
+
+    public Team joinTeam(String teamName, String playerEmail) {
+        Team team = this.getTeamByName(teamName);
+        if (team == null) {
+            System.out.println("Team does not exist.");
+            return null;
+        }
+
+        Player player = this.playerService.getPlayerByEmail(playerEmail);
+        if (player == null) {
+            System.out.println("Player does not exist.");
+            return null;
+        }
+
+        if ((team.getPlayerLeft() != null && team.getPlayerLeft().equals(player)) ||
+                (team.getPlayerRight() != null && team.getPlayerRight().equals(player))) {
+            System.out.println("Player already in team.");
+            return null;
+        }
+
+        // fill up places
+        if (team.getPlayerLeft() == null) {
+            team.setPlayerLeft(player);
+            return this.teamRepository.save(team);
+        } else if (team.getPlayerRight() == null) {
+            team.setPlayerRight(player);
+            return this.teamRepository.save(team);
+        } else {
+            // all places already taken
+            System.out.println("Team already full.");
+            return null;
+        }
+
     }
 }

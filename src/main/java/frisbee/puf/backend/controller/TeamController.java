@@ -1,5 +1,6 @@
 package frisbee.puf.backend.controller;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import frisbee.puf.backend.model.Team;
 import frisbee.puf.backend.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -35,6 +37,16 @@ public class TeamController {
     @PostMapping("/teams/create")
     public ResponseEntity<Team> createTeam(@RequestBody String name) {
         Team team = this.teamService.createTeam(name);
+        HttpStatus httpStatus = team == null ? HttpStatus.BAD_REQUEST : HttpStatus.CREATED;
+        return new ResponseEntity<>(team, httpStatus);
+    }
+
+    @PostMapping("/teams/join")
+    public ResponseEntity<Team> joinTeam(@RequestBody ObjectNode objectNode) {
+        String teamName = objectNode.get("teamName").asText();
+        String playerEmail = objectNode.get("playerEmail").asText();
+
+        Team team = this.teamService.joinTeam(teamName, playerEmail);
         HttpStatus httpStatus = team == null ? HttpStatus.BAD_REQUEST : HttpStatus.CREATED;
         return new ResponseEntity<>(team, httpStatus);
     }
