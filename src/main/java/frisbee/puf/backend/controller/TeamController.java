@@ -5,10 +5,7 @@ import frisbee.puf.backend.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +24,12 @@ public class TeamController {
         return new ResponseEntity<>(teamList, httpStatus);
     }
 
-    // TODO: team highscore, add team, join team, update team, get one team by name
+    @PostMapping("/teams/create")
+    public ResponseEntity createTeam(@RequestBody String name) {
+        Team team = this.teamService.createTeam(name);
+        HttpStatus httpStatus = team == null ? HttpStatus.BAD_REQUEST : HttpStatus.CREATED;
+        return new ResponseEntity<>(team, httpStatus);
+    }
+
+    // TODO: team highscore, join team, update team, get one team by name
 }
