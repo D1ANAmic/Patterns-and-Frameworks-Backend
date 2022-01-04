@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
@@ -22,6 +23,21 @@ public class PlayerService {
 
     public List<Player> getAllPlayers(){
         return this.playerRepository.findAll();
+    }
+
+    /**
+     * Gets a player object by email and returns it.
+     * @param email email adress of the player
+     * @return player object
+     * @throws java.util.NoSuchElementException if player does not exist
+     */
+    public Player getPlayerByEmail(String email) throws NoSuchElementException {
+        Player player = this.playerRepository.findByEmail(email);
+        if (player == null) {
+            throw new NoSuchElementException("Player with this email does not exist.");
+        }
+
+        return player;
     }
 
     public Player registerPlayer(Player newPlayer){

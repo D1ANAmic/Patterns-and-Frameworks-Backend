@@ -36,6 +36,9 @@ Datenbank erstellen:
 
 Anschließend Postgres neustarten.
 
+### Datenbankmigrationen
+Für die Migrationen wird Flyway genutzt. Migrationen können über Intellij einfach mit dem Plugin "JPA Buddy" erstellt werden, siehe https://www.baeldung.com/database-migrations-with-flyway#generate-versioned-migrations-in-intellij-idea.
+
 ## Anwendung starten
 
 Das Backend kann über die Klasse `BackendApplication` gestartet werden.
