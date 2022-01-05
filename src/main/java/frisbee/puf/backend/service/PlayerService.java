@@ -22,20 +22,6 @@ public class PlayerService {
         return this.playerRepository.findAll();
     }
 
-    /**
-     * Gets a player object by id and returns it.
-     * @param id id of the player
-     * @return player object
-     * @throws java.util.NoSuchElementException if player does not exist
-     */
-    public Optional<Player> getPlayerById(long id) throws NoSuchElementException {
-        Optional<Player> player = this.playerRepository.findById(id);
-        if (player.isEmpty()) {
-            throw new NoSuchElementException("Player with this id does not exist.");
-        }
-
-        return player;
-    }
 
     /**
      * Gets a player object by email and returns it.

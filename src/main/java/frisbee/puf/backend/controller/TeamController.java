@@ -36,10 +36,10 @@ public class TeamController {
         }
     }
 
-    @GetMapping("/teams/player/{playerId}")
-    public ResponseEntity<?> getTeamByPlayer(@PathVariable("playerId") String playerId){
+    @GetMapping("/teams/player/{email}")
+    public ResponseEntity<?> getTeamByPlayer(@PathVariable("email") String email){
         try {
-            List<Team> teams = this.teamService.getTeamByPlayer(Long.parseLong(playerId));
+            List<Team> teams = this.teamService.getTeamByPlayer(email);
             return new ResponseEntity<>(teams, HttpStatus.OK);
         } catch(NoSuchElementException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
