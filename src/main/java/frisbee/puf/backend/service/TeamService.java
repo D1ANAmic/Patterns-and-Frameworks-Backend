@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class TeamService {
@@ -41,6 +42,29 @@ public class TeamService {
 
         // return first team found, since there should not be more than one with the same name
         return teams.get(0);
+    }
+
+    /**
+     * Gets a team by player id and returns it.
+     * @param playerId id of the player
+     * @return Team object
+     * @throws NoSuchElementException when team is not found
+     */
+    public List<Team> getTeamByPlayer(long playerId) throws NoSuchElementException {
+        Optional<Player> player = this.playerService.getPlayerById(playerId);
+        if (player.isEmpty()) {
+            System.out.println("Player does not exist.");
+            throw new NoSuchElementException("Player does not exist.");
+        }
+
+        List<Team> teams = this.teamRepository.findByPlayer(player.get());
+        if (teams.isEmpty()) {
+            System.out.println("Team does not exist.");
+            throw new NoSuchElementException("Team does not exist.");
+        }
+
+        // return all teams for player
+        return teams;
     }
 
     /**

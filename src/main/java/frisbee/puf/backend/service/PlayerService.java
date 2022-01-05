@@ -5,10 +5,7 @@ import frisbee.puf.backend.repository.PlayerRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class PlayerService {
@@ -23,6 +20,21 @@ public class PlayerService {
 
     public List<Player> getAllPlayers(){
         return this.playerRepository.findAll();
+    }
+
+    /**
+     * Gets a player object by id and returns it.
+     * @param id id of the player
+     * @return player object
+     * @throws java.util.NoSuchElementException if player does not exist
+     */
+    public Optional<Player> getPlayerById(long id) throws NoSuchElementException {
+        Optional<Player> player = this.playerRepository.findById(id);
+        if (player.isEmpty()) {
+            throw new NoSuchElementException("Player with this id does not exist.");
+        }
+
+        return player;
     }
 
     /**
