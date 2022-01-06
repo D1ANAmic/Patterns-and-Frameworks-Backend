@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 @CrossOrigin
@@ -32,6 +31,16 @@ public class TeamController {
         try {
             Team team = this.teamService.getTeamByName(name);
             return new ResponseEntity<>(team, HttpStatus.OK);
+        } catch(NoSuchElementException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/teams/player/{email}")
+    public ResponseEntity<?> getTeamByPlayer(@PathVariable("email") String email){
+        try {
+            List<Team> teams = this.teamService.getTeamByPlayer(email);
+            return new ResponseEntity<>(teams, HttpStatus.OK);
         } catch(NoSuchElementException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }

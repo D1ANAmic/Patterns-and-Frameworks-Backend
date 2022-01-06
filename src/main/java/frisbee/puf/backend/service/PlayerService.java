@@ -5,10 +5,7 @@ import frisbee.puf.backend.repository.PlayerRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class PlayerService {
@@ -24,6 +21,7 @@ public class PlayerService {
     public List<Player> getAllPlayers(){
         return this.playerRepository.findAll();
     }
+
 
     /**
      * Gets a player object by email and returns it.

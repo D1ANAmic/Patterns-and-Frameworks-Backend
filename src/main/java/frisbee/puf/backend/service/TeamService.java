@@ -44,6 +44,29 @@ public class TeamService {
     }
 
     /**
+     * Gets a team by player email and returns it.
+     * @param email email of the player
+     * @return Team object
+     * @throws NoSuchElementException when team is not found
+     */
+    public List<Team> getTeamByPlayer(String email) throws NoSuchElementException {
+        Player player = this.playerService.getPlayerByEmail(email);
+        if (player == null) {
+            System.out.println("Player does not exist.");
+            throw new NoSuchElementException("Player does not exist.");
+        }
+
+        List<Team> teams = this.teamRepository.findByPlayer(player);
+        if (teams.isEmpty()) {
+            System.out.println("Team does not exist.");
+            throw new NoSuchElementException("Team does not exist.");
+        }
+
+        // return all teams for player
+        return teams;
+    }
+
+    /**
      * Creates a new team and returns it.
      * @param name name of team
      * @return created team object
