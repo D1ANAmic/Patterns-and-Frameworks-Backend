@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class TeamService {
@@ -45,19 +44,19 @@ public class TeamService {
     }
 
     /**
-     * Gets a team by player id and returns it.
-     * @param playerId id of the player
+     * Gets a team by player email and returns it.
+     * @param email email of the player
      * @return Team object
      * @throws NoSuchElementException when team is not found
      */
-    public List<Team> getTeamByPlayer(long playerId) throws NoSuchElementException {
-        Optional<Player> player = this.playerService.getPlayerById(playerId);
-        if (player.isEmpty()) {
+    public List<Team> getTeamByPlayer(String email) throws NoSuchElementException {
+        Player player = this.playerService.getPlayerByEmail(email);
+        if (player == null) {
             System.out.println("Player does not exist.");
             throw new NoSuchElementException("Player does not exist.");
         }
 
-        List<Team> teams = this.teamRepository.findByPlayer(player.get());
+        List<Team> teams = this.teamRepository.findByPlayer(player);
         if (teams.isEmpty()) {
             System.out.println("Team does not exist.");
             throw new NoSuchElementException("Team does not exist.");
