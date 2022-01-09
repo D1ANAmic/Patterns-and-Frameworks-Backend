@@ -26,6 +26,7 @@ public class TeamService {
         return this.teamRepository.findAll();
     }
 
+
     /**
      * Gets a team by name and returns it.
      * @param name of the team
@@ -60,6 +61,29 @@ public class TeamService {
         if (teams.isEmpty()) {
             System.out.println("Team does not exist.");
             throw new NoSuchElementException("Team does not exist.");
+        }
+
+        // return all teams for player
+        return teams;
+    }
+
+    /**
+     * Gets the active team by player email and returns it.
+     * @param email email of the player
+     * @return Team object
+     * @throws NoSuchElementException when team is not found
+     */
+    public List<Team> getActiveTeamByPlayer(String email) throws NoSuchElementException {
+        Player player = this.playerService.getPlayerByEmail(email);
+        if (player == null) {
+            System.out.println("Player does not exist.");
+            throw new NoSuchElementException("Player does not exist.");
+        }
+
+        List<Team> teams = this.teamRepository.findActiveByPlayer(player);
+        if (teams.isEmpty()) {
+            System.out.println("No active team exists.");
+            throw new NoSuchElementException("No active team exists.");
         }
 
         // return all teams for player
@@ -128,15 +152,17 @@ public class TeamService {
      * @param level new level of the team
      * @param score new score of the team
      * @param lives new remaining lives of the team
+     * @param active active status of the team
      * @return the updated team object
      * @throws NoSuchElementException if team was not found
      */
-    public Team updateTeam(String name, int level, int score, int lives) throws NoSuchElementException {
+    public Team updateTeam(String name, int level, int score, int lives, boolean active) throws NoSuchElementException {
         Team team = this.getTeamByName(name);
 
         team.setLevel(level);
         team.setScore(score);
         team.setLives(lives);
+        team.setActive(active);
         return this.teamRepository.save(team);
     }
 }

@@ -46,6 +46,16 @@ public class TeamController {
         }
     }
 
+    @GetMapping("/teams/player/{email}/active")
+    public ResponseEntity<?> getActiveTeamByPlayer(@PathVariable("email") String email){
+        try {
+            List<Team> teams = this.teamService.getActiveTeamByPlayer(email);
+            return new ResponseEntity<>(teams, HttpStatus.OK);
+        } catch(NoSuchElementException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/teams/create")
     public ResponseEntity<?> createTeam(@RequestBody String name) {
         try {
@@ -75,9 +85,10 @@ public class TeamController {
         int level = objectNode.get("level").asInt();
         int score = objectNode.get("score").asInt();
         int lives = objectNode.get("lives").asInt();
+        boolean active = objectNode.get("active").asBoolean();
 
         try {
-            Team team = this.teamService.updateTeam(name, level, score, lives);
+            Team team = this.teamService.updateTeam(name, level, score, lives, active);
             return new ResponseEntity<>(team, HttpStatus.CREATED);
         } catch(NoSuchElementException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
