@@ -33,4 +33,7 @@ public class Team {
 
     @Column (name="lives")
     private int lives;
+
+    @Column (name="active")
+    private boolean active;
 }

@@ -85,6 +85,7 @@ public class TeamService {
         newTeam.setLevel(0);
         newTeam.setLives(5);
         newTeam.setScore(0);
+        newTeam.setActive(true);
         //save and return
         return this.teamRepository.save(newTeam);
     }
