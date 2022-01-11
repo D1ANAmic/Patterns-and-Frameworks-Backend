@@ -106,7 +106,7 @@ public class TeamService {
         // initialize with default values
         Team newTeam = new Team();
         newTeam.setName(name);
-        newTeam.setLevel(0);
+        newTeam.setLevel(1);
         newTeam.setLives(5);
         newTeam.setScore(0);
         newTeam.setActive(true);
