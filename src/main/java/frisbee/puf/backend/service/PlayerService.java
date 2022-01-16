@@ -4,9 +4,11 @@ import frisbee.puf.backend.model.Player;
 import frisbee.puf.backend.repository.PlayerRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
+@Slf4j
 @Service
 public class PlayerService {
 
@@ -43,7 +45,7 @@ public class PlayerService {
 
         for (Player player : players) {
             if (player.getEmail().equals(newPlayer.getEmail())) {
-                System.out.println("Player already exists!");
+                log.info("Player already exists!");
                 return null;
             }
         }
@@ -54,30 +56,30 @@ public class PlayerService {
     public Player loginPlayer(Map<String, String> credentials){
         Player player = playerRepository.findByEmail(credentials.get("email"));
         if (player == null){
-            System.out.println("Player with given email doesn't exist!");
+            log.info("Player with given email doesn't exist!");
             return null;
         }
         if (passwordEncoder.matches(credentials.get("password"), player.getPassword())){
             return player;
         } else{
-            System.out.println("Login failed!");
+            log.info("Login failed!");
             return null;
         }
     }
 
     public void deleteAllPlayers(){
         this.playerRepository.deleteAll();
-        System.out.println("All players deleted!");
+        log.info("All players deleted!");
     }
 
     public Player updatePlayerName(String email, String newName) {
         Player currentPlayer = playerRepository.findByEmail(email);
-        System.out.println("CURRENT PLAYERS NAME: " + currentPlayer.getName());
+        log.info("CURRENT PLAYERS NAME: " + currentPlayer.getName());
         if (newName != null && newName.length() > 0 && !Objects.equals(currentPlayer.getName(), newName)) {
             currentPlayer.setName(newName);
             return this.playerRepository.save(currentPlayer);
         } else {
-            System.out.println("Name can not be modified!");
+            log.info("Name can not be modified!");
             return null;
         }
     }
