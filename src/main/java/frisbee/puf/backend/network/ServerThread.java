@@ -12,8 +12,9 @@ import java.net.Socket;
 class ServerThread extends Thread {
 
     private Socket client;
-    private BufferedReader br;
-    private BufferedWriter bw;
+    private ObjectOutputStream outToClient;
+    private ObjectInputStream inFromClient;
+
 
     // Default constructor required to autowire class
     public ServerThread(){}
@@ -21,8 +22,8 @@ class ServerThread extends Thread {
     public ServerThread(Socket client) {
         this.client = client;
         try {
-            this.br = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            this.bw = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+            outToClient = new ObjectOutputStream(client.getOutputStream());
+            inFromClient = new ObjectInputStream(client.getInputStream());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -32,21 +33,30 @@ class ServerThread extends Thread {
     public void run() {
         try {
             log.info(client.getInetAddress().getLocalHost() + " established a connection to the server.");
-
-            // TODO: some sort of shutdown connection close is needed
-            //Read messages from client
-            String msg = br.readLine();
-            log.info("Client:" + msg);
-
-            // TODO: use enums and stuff here, like in client
-            if (msg != null) {
-                //Send message to client
-                log.info("To Client:" + msg);
-                bw.write(msg + "\n");
-                bw.flush();
-            }
-        }catch (Exception e) {
+        }  catch(Exception e){
             e.printStackTrace();
         }
+
+        // TODO: stop if something breaks in client
+        while (true) {
+            try {
+                // TODO: some sort of shutdown connection close is needed
+                //Read request from client
+                //TODO: we need a shared object between client and server, like a request object
+                String request = (String) inFromClient.readObject();
+                log.info("Client:" + request);
+
+                // TODO: use enums and stuff here, like in client
+                if (request.equals("left") || request.equals("right")) {
+                    //Send request to client
+                    log.info("To Client:" + request);
+                    outToClient.writeObject(request);
+                }
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+         }
     }
+
+    // TODO: stop thread, e.g. when client is shut down
 }
