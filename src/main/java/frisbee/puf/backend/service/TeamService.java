@@ -4,10 +4,12 @@ import frisbee.puf.backend.model.Player;
 import frisbee.puf.backend.model.Team;
 import frisbee.puf.backend.repository.TeamRepository;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Slf4j
 @Service
 public class TeamService {
     TeamRepository teamRepository;
@@ -36,7 +38,7 @@ public class TeamService {
     public Team getTeamByName(String name) throws NoSuchElementException {
         List<Team> teams = this.teamRepository.findByName(name);
         if (teams.isEmpty()) {
-            System.out.println("Team does not exist.");
+            log.info("Team does not exist.");
             throw new NoSuchElementException("Team does not exist.");
         }
 
@@ -53,13 +55,13 @@ public class TeamService {
     public List<Team> getTeamByPlayer(String email) throws NoSuchElementException {
         Player player = this.playerService.getPlayerByEmail(email);
         if (player == null) {
-            System.out.println("Player does not exist.");
+            log.info("Player does not exist.");
             throw new NoSuchElementException("Player does not exist.");
         }
 
         List<Team> teams = this.teamRepository.findByPlayer(player);
         if (teams.isEmpty()) {
-            System.out.println("Team does not exist.");
+            log.info("Team does not exist.");
             throw new NoSuchElementException("Team does not exist.");
         }
 
@@ -76,13 +78,13 @@ public class TeamService {
     public List<Team> getActiveTeamByPlayer(String email) throws NoSuchElementException {
         Player player = this.playerService.getPlayerByEmail(email);
         if (player == null) {
-            System.out.println("Player does not exist.");
+            log.info("Player does not exist.");
             throw new NoSuchElementException("Player does not exist.");
         }
 
         List<Team> teams = this.teamRepository.findActiveByPlayer(player);
         if (teams.isEmpty()) {
-            System.out.println("No active team exists.");
+            log.info("No active team exists.");
             throw new NoSuchElementException("No active team exists.");
         }
 
@@ -99,7 +101,7 @@ public class TeamService {
     public Team createTeam(String name) throws IllegalArgumentException {
         List<Team> existingTeams = this.teamRepository.findByName(name);
         if (!existingTeams.isEmpty()) {
-            System.out.println("Team already exists.");
+            log.info("Team already exists.");
             throw new IllegalArgumentException("Team already exists.");
         }
 
@@ -128,7 +130,7 @@ public class TeamService {
 
         if ((team.getPlayerLeft() != null && team.getPlayerLeft().equals(player)) ||
                 (team.getPlayerRight() != null && team.getPlayerRight().equals(player))) {
-            System.out.println("Player already in team.");
+            log.info("Player already in team.");
             throw new IllegalArgumentException("Player is already in the team.");
         }
 
@@ -141,7 +143,7 @@ public class TeamService {
             return this.teamRepository.save(team);
         } else {
             // all places already taken
-            System.out.println("Team already full.");
+            log.info("Team already full.");
             throw new IllegalArgumentException("Team is already full.");
         }
     }
