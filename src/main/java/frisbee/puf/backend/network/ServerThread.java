@@ -14,6 +14,7 @@ class ServerThread extends Thread {
     private Socket client;
     private ObjectOutputStream outToClient;
     private ObjectInputStream inFromClient;
+    private boolean isRunning;
 
 
     // Default constructor required to autowire class
@@ -24,6 +25,7 @@ class ServerThread extends Thread {
         try {
             outToClient = new ObjectOutputStream(client.getOutputStream());
             inFromClient = new ObjectInputStream(client.getInputStream());
+            isRunning = true;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -38,7 +40,7 @@ class ServerThread extends Thread {
         }
 
         // TODO: stop if something breaks in client
-        while (true) {
+        while (isRunning) {
             try {
                 //TODO: we need a shared object between client and server, like a request object
                 //Read request from client
@@ -58,6 +60,7 @@ class ServerThread extends Thread {
                 }
             } catch(Exception e){
                 e.printStackTrace();
+                isRunning = false;
             }
          }
     }
