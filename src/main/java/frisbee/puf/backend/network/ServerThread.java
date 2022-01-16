@@ -40,17 +40,21 @@ class ServerThread extends Thread {
         // TODO: stop if something breaks in client
         while (true) {
             try {
-                // TODO: some sort of shutdown connection close is needed
-                //Read request from client
                 //TODO: we need a shared object between client and server, like a request object
-                String request = (String) inFromClient.readObject();
-                log.info("Client:" + request);
+                //Read request from client
+                String direction = (String) inFromClient.readObject();
+                log.info("Client:" + direction);
 
-                // TODO: use enums and stuff here, like in client
-                if (request.equals("left") || request.equals("right")) {
+                // TODO: when we have a shared object, we need to differentiate between the characters
+                // TODO: not sure how to do it with different threads for each client though
+                // TODO: the connection somehow needs to be made over the team
+                if (direction.equals("left") || direction.equals("right")) {
                     //Send request to client
-                    log.info("To Client:" + request);
-                    outToClient.writeObject(request);
+                    log.info("To Client:" + direction);
+                    // TODO: return real value, for now just return the opposite of the own character value
+                    outToClient.writeObject(
+                            direction.equals("left") ? "right" : "left"
+                    );
                 }
             } catch(Exception e){
                 e.printStackTrace();
