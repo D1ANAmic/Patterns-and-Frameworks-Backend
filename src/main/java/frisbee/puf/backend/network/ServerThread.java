@@ -44,20 +44,12 @@ class ServerThread extends Thread {
             try {
                 //TODO: we need a shared object between client and server, like a request object
                 //Read request from client
-                String direction = (String) inFromClient.readObject();
-                log.info("Client:" + direction);
+                String request = (String) inFromClient.readObject();
+                log.info("Client:" + request);
 
-                // TODO: when we have a shared object, we need to differentiate between the characters
-                // TODO: not sure how to do it with different threads for each client though
-                // TODO: the connection somehow needs to be made over the team
-                if (direction.equals("left") || direction.equals("right")) {
-                    //Send request to client
-                    log.info("To Client:" + direction);
-                    // TODO: return real value, for now just return the opposite of the own character value
-                    outToClient.writeObject(
-                            direction.equals("left") ? "right" : "left"
-                    );
-                }
+                log.info("To Client:" + request);
+                // TODO: return real value, for now just return the opposite of the own character value
+                outToClient.writeObject(request);
             } catch(Exception e){
                 e.printStackTrace();
                 isRunning = false;
