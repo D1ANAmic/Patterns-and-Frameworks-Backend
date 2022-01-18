@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.security.auth.login.LoginException;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @CrossOrigin // configure allowed origins
 @RestController //bind return values of methods to web response body
@@ -19,7 +22,7 @@ public class PlayerController {
 
     @RequestMapping("/")
     public String message() {
-        return "It's working!";
+        return "Welcome to the Frizzbee Freakz API";
     }
 
     @GetMapping("/players")
@@ -32,18 +35,26 @@ public class PlayerController {
 
     @PostMapping("/players/register")
     public ResponseEntity registerPlayer(@RequestBody Player newPlayer) {
-
-        Player registeredPlayer = this.playerService.registerPlayer(newPlayer);
-        HttpStatus httpStatus = registeredPlayer == null? HttpStatus.BAD_REQUEST : HttpStatus.CREATED;
-        return new ResponseEntity<>(registeredPlayer, httpStatus);
+        try {
+            Player registeredPlayer = this.playerService.registerPlayer(newPlayer);
+            return new ResponseEntity<>(registeredPlayer, HttpStatus.CREATED);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/players/login")
     public ResponseEntity loginPlayer(@RequestBody Map<String, String> credentials) {
 
-        Player loggedInPlayer = this.playerService.loginPlayer(credentials);
-        HttpStatus httpStatus = loggedInPlayer == null? HttpStatus.BAD_REQUEST : HttpStatus.OK;
-        return new ResponseEntity<>(loggedInPlayer, httpStatus);
+        Player loggedInPlayer = null;
+        try {
+            loggedInPlayer = this.playerService.loginPlayer(credentials);
+            return new ResponseEntity<>(loggedInPlayer, HttpStatus.OK);
+        } catch (LoginException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/players/delete-all")
@@ -54,9 +65,12 @@ public class PlayerController {
 
     @PutMapping("/players/update-player-name/{email}")
     public ResponseEntity updatePlayerName(@PathVariable("email") String email, @RequestBody String newName) {
+        try {
+            Player updatedPlayer = this.playerService.updatePlayerName(email, newName);
+            return new ResponseEntity<>(updatedPlayer, HttpStatus.OK);
+        } catch (IllegalArgumentException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
-        Player updatedPlayer = this.playerService.updatePlayerName(email, newName);
-        HttpStatus httpStatus = updatedPlayer == null? HttpStatus.BAD_REQUEST : HttpStatus.OK;
-        return new ResponseEntity<>(updatedPlayer, httpStatus);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.security.auth.login.LoginException;
 import java.util.*;
 
 @Slf4j
@@ -20,6 +21,10 @@ public class PlayerService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
+    /**
+     * Gets a list of all players and returns it
+     * @return list of player objects
+     */
     public List<Player> getAllPlayers(){
         return this.playerRepository.findAll();
     }
@@ -36,43 +41,65 @@ public class PlayerService {
         if (player == null) {
             throw new NoSuchElementException("Player with this email does not exist.");
         }
-
         return player;
     }
 
-    public Player registerPlayer(Player newPlayer){
+    /**
+     * Saves a new player object in database and returns it
+     * @param newPlayer player object to be saved
+     * @return player object
+     * @throws IllegalArgumentException if player with same email already exists
+     */
+    public Player registerPlayer(Player newPlayer) throws IllegalArgumentException{
         List<Player> players = this.playerRepository.findAll();
 
         for (Player player : players) {
             if (player.getEmail().equals(newPlayer.getEmail())) {
                 log.info("Player already exists!");
-                return null;
+                throw new IllegalArgumentException("Player already exists!");
             }
         }
         newPlayer.setPassword(this.passwordEncoder.encode(newPlayer.getPassword()));
         return this.playerRepository.save(newPlayer);
     }
 
-    public Player loginPlayer(Map<String, String> credentials){
+    /**
+     * Logs in player based on credentials and returns logged in player
+     * @param credentials email and password of player to be logged in
+     * @return logged in player object
+     * @throws NoSuchElementException if player with given email doesn't exist
+     * @throws LoginException if password is incorrect
+     */
+    public Player loginPlayer(Map<String, String> credentials) throws NoSuchElementException, LoginException {
         Player player = playerRepository.findByEmail(credentials.get("email"));
         if (player == null){
             log.info("Player with given email doesn't exist!");
-            return null;
+            throw new NoSuchElementException("Player with given email doesn't exist!");
         }
         if (passwordEncoder.matches(credentials.get("password"), player.getPassword())){
             return player;
         } else{
             log.info("Login failed!");
-            return null;
+            throw new LoginException("Login failed!");
         }
     }
 
+    /**
+     * Deletes all players from database
+     */
     public void deleteAllPlayers(){
         this.playerRepository.deleteAll();
         log.info("All players deleted!");
     }
 
-    public Player updatePlayerName(String email, String newName) {
+    /**
+     * Updates player name and returns player object
+     * @param email email of player by which player object is identified
+     * @param newName new name for player object
+     * @return player object with updated name
+     * @throws IllegalArgumentException if new name is empty or player with new name already exists
+     */
+    public Player updatePlayerName(String email, String newName) throws IllegalArgumentException{
         Player currentPlayer = playerRepository.findByEmail(email);
         log.info("CURRENT PLAYERS NAME: " + currentPlayer.getName());
         if (newName != null && newName.length() > 0 && !Objects.equals(currentPlayer.getName(), newName)) {
@@ -80,7 +107,7 @@ public class PlayerService {
             return this.playerRepository.save(currentPlayer);
         } else {
             log.info("Name can not be modified!");
-            return null;
+            throw new IllegalArgumentException("Name can not be modified!");
         }
     }
 
