@@ -73,6 +73,9 @@ class ServerThread extends Thread {
                     case THROW:
                         throwFrisbee(clientRequest);
                         break;
+                    case GAME_RUNNING:
+                        startGame(clientRequest);
+                        break;
                 }
 
             } catch(Exception e){
@@ -120,6 +123,12 @@ class ServerThread extends Thread {
     @SneakyThrows
     private void throwFrisbee(SocketRequest clientRequest) {
         log.info(client.getInetAddress().getLocalHost() + "has sent a message of type THROW.");
+        this.otherClient.sendToClient(clientRequest);
+    }
+
+    @SneakyThrows
+    private void startGame(SocketRequest clientRequest) {
+        log.info(client.getInetAddress().getLocalHost() + "has sent a message of type GAME_RUNNING.");
         this.otherClient.sendToClient(clientRequest);
     }
 

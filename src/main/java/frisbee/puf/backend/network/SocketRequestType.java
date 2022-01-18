@@ -10,5 +10,7 @@ public enum SocketRequestType {
     @JsonProperty("MOVE")
     MOVE,
     @JsonProperty("THROW")
-    THROW;
+    THROW,
+    @JsonProperty("GAME_RUNNING")
+    GAME_RUNNING;
 }
