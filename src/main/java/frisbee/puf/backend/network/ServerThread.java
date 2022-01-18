@@ -100,6 +100,7 @@ class ServerThread extends Thread {
                     this.otherClient = clientThread;
                 }
             }
+            this.otherClient.otherClient = this;
         }
         log.info(String.valueOf(canStartGame));
         SocketRequest response = new SocketRequest(SocketRequestType.READY, Boolean.toString(canStartGame));
