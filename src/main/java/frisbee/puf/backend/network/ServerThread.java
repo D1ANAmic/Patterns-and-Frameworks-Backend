@@ -3,6 +3,7 @@ package frisbee.puf.backend.network;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -54,7 +55,6 @@ class ServerThread extends Thread {
                 // TODO: not sure how to do it with different threads for each client though
                 // TODO: the connection somehow needs to be made over the team
 
-                log.info("Is Running");
                 String receivedJsonString = (String) inFromClient.readObject();
 
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -65,40 +65,58 @@ class ServerThread extends Thread {
 
                 switch (messageType){
                     case INIT:
-                        log.info(client.getInetAddress().getLocalHost() + "has sent a message of type INIT.");
-
-                        this.teamName = clientRequest.getValue();
-                        //add client to list of client threads
-                        SocketServer.addClient(this.teamName, this);
-                        Set<ServerThread> teamClientThreads = SocketServer.getClientThreadsByTeam().get(this.teamName);
-                        boolean canStartGame = false;
-                        if (teamClientThreads.size() == 2) {
-                            canStartGame = true;
-                            for (ServerThread clientThread : teamClientThreads) {
-                                if (!clientThread.equals(this)) {
-                                    this.otherClient = clientThread;
-                                }
-                            }
-                        }
-
-                        SocketRequest response = new SocketRequest(SocketRequestType.READY, Boolean.toString(canStartGame));
-                        sendToClient(response);
-
-
+                        initClient(clientRequest);
                     case MOVE:
-                        log.info(client.getInetAddress().getLocalHost() + "has sent a message of type MOVE.");
-                        this.otherClient.sendToClient(clientRequest);
+                        moveCharacter(clientRequest);
                     case THROW:
-                        log.info(client.getInetAddress().getLocalHost() + "has sent a message of type THROW.");
-                        this.otherClient.sendToClient(clientRequest);
-
+                        throwFrisbee(clientRequest);
                 }
 
             } catch(Exception e){
                 e.printStackTrace();
                 isRunning = false;
+                SocketRequest response = new SocketRequest(SocketRequestType.READY, "false");
+                sendToClient(response);
             }
          }
+    }
+
+    @SneakyThrows
+    private void initClient(SocketRequest clientRequest){
+        log.info(client.getInetAddress().getLocalHost() + "has sent a message of type INIT.");
+
+        this.teamName = clientRequest.getValue();
+        //add client to list of client threads
+        SocketServer.addClient(this.teamName, this);
+        Set<ServerThread> teamClientThreads = SocketServer.getClientThreadsByTeam().get(this.teamName);
+        boolean canStartGame = false;
+        if (teamClientThreads.size() == 2) {
+            canStartGame = true;
+            for (ServerThread clientThread : teamClientThreads) {
+                if (!clientThread.equals(this)) {
+                    this.otherClient = clientThread;
+                }
+            }
+        }
+        log.info(String.valueOf(canStartGame));
+        SocketRequest response = new SocketRequest(SocketRequestType.READY, Boolean.toString(canStartGame));
+        if (canStartGame){
+            this.otherClient.sendToClient(response);
+        }
+        sendToClient(response);
+
+    }
+
+    @SneakyThrows
+    private void moveCharacter(SocketRequest clientRequest){
+        log.info(client.getInetAddress().getLocalHost() + "has sent a message of type MOVE.");
+        this.otherClient.sendToClient(clientRequest);
+    }
+
+    @SneakyThrows
+    private void throwFrisbee(SocketRequest clientRequest) {
+        log.info(client.getInetAddress().getLocalHost() + "has sent a message of type THROW.");
+        this.otherClient.sendToClient(clientRequest);
     }
 
     private void sendToClient(SocketRequest request) {
