@@ -66,10 +66,13 @@ class ServerThread extends Thread {
                 switch (messageType){
                     case INIT:
                         initClient(clientRequest);
+                        break;
                     case MOVE:
                         moveCharacter(clientRequest);
+                        break;
                     case THROW:
                         throwFrisbee(clientRequest);
+                        break;
                 }
 
             } catch(Exception e){
