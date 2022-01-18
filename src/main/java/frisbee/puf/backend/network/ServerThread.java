@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 @Slf4j
@@ -50,11 +48,6 @@ class ServerThread extends Thread {
         // TODO: stop if something breaks in client
         while (isRunning) {
             try {
-                //TODO: we need a shared object between client and server, like a request object
-                // TODO: when we have a shared object, we need to differentiate between the characters
-                // TODO: not sure how to do it with different threads for each client though
-                // TODO: the connection somehow needs to be made over the team
-
                 String receivedJsonString = (String) inFromClient.readObject();
 
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -63,19 +56,11 @@ class ServerThread extends Thread {
 
                 SocketRequestType messageType = clientRequest.getRequestType();
 
-                switch (messageType){
-                    case INIT:
-                        initClient(clientRequest);
-                        break;
-                    case MOVE:
-                        moveCharacter(clientRequest);
-                        break;
-                    case THROW:
-                        throwFrisbee(clientRequest);
-                        break;
-                    case GAME_RUNNING:
-                        startGame(clientRequest);
-                        break;
+                switch (messageType) {
+                    case INIT -> initClient(clientRequest);
+                    case MOVE -> moveCharacter(clientRequest);
+                    case THROW -> throwFrisbee(clientRequest);
+                    case GAME_RUNNING -> startGame(clientRequest);
                 }
 
             } catch(Exception e){
@@ -97,10 +82,10 @@ class ServerThread extends Thread {
         Set<ServerThread> teamClientThreads = SocketServer.getClientThreadsByTeam().get(this.teamName);
         boolean canStartGame = false;
         if (teamClientThreads.size() == 2) {
-            canStartGame = true;
             for (ServerThread clientThread : teamClientThreads) {
                 if (!clientThread.equals(this)) {
                     this.otherClient = clientThread;
+                    canStartGame = true;
                 }
             }
             this.otherClient.otherClient = this;
