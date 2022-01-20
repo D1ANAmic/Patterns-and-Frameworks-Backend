@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Set;
 
 @Slf4j
@@ -46,7 +47,7 @@ class ServerThread extends Thread {
         }
 
         // TODO: stop if something breaks in client
-        while (isRunning) {
+        while (this.isRunning) {
             try {
                 String receivedJsonString = (String) inFromClient.readObject();
 
@@ -61,15 +62,22 @@ class ServerThread extends Thread {
                     case MOVE -> moveCharacter(clientRequest);
                     case THROW -> throwFrisbee(clientRequest);
                     case GAME_RUNNING -> startGame(clientRequest);
+                    case DISCONNECT -> disconnect(clientRequest);
                 }
 
             } catch(Exception e){
                 e.printStackTrace();
                 isRunning = false;
-                SocketRequest response = new SocketRequest(SocketRequestType.READY, "false");
-                sendToClient(response);
             }
-         }
+        }
+        SocketRequest response = new SocketRequest(SocketRequestType.READY, "false");
+        sendToClient(response);
+        try {
+            log.info("Connection to " + client.getInetAddress().getLocalHost() + " closed");
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @SneakyThrows
@@ -115,6 +123,13 @@ class ServerThread extends Thread {
     private void startGame(SocketRequest clientRequest) {
         log.info(client.getInetAddress().getLocalHost() + "has sent a message of type GAME_RUNNING.");
         this.otherClient.sendToClient(clientRequest);
+    }
+
+    @SneakyThrows
+    private void disconnect(SocketRequest clientRequest) {
+        log.info(client.getInetAddress().getLocalHost() + "has sent a message of type DISCONNECT.");
+        this.isRunning = false;
+        SocketServer.removeClient(this.teamName, this);
     }
 
     private void sendToClient(SocketRequest request) {
