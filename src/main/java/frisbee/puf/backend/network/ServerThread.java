@@ -130,6 +130,8 @@ class ServerThread extends Thread {
         log.info(client.getInetAddress().getLocalHost() + "has sent a message of type DISCONNECT.");
         this.isRunning = false;
         SocketServer.removeClient(this.teamName, this);
+        SocketRequest response = new SocketRequest(SocketRequestType.READY, "false");
+        this.otherClient.sendToClient(response);
     }
 
     private void sendToClient(SocketRequest request) {
