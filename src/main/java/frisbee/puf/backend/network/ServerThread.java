@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Set;
 
 @Slf4j
@@ -46,7 +47,7 @@ class ServerThread extends Thread {
         }
 
         // TODO: stop if something breaks in client
-        while (isRunning) {
+        while (this.isRunning) {
             try {
                 String receivedJsonString = (String) inFromClient.readObject();
 
@@ -61,15 +62,20 @@ class ServerThread extends Thread {
                     case MOVE -> moveCharacter(clientRequest);
                     case THROW -> throwFrisbee(clientRequest);
                     case GAME_RUNNING -> startGame(clientRequest);
+                    case DISCONNECT -> disconnect();
                 }
 
             } catch(Exception e){
-                e.printStackTrace();
                 isRunning = false;
-                SocketRequest response = new SocketRequest(SocketRequestType.READY, "false");
-                sendToClient(response);
             }
-         }
+        }
+        disconnect();
+        try {
+            log.info("Connection to " + client.getInetAddress().getLocalHost() + " closed");
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @SneakyThrows
@@ -101,20 +107,36 @@ class ServerThread extends Thread {
 
     @SneakyThrows
     private void moveCharacter(SocketRequest clientRequest){
-        log.info(client.getInetAddress().getLocalHost() + "has sent a message of type MOVE.");
+        log.info(client.getInetAddress().getLocalHost() + " has sent a message of type MOVE.");
         this.otherClient.sendToClient(clientRequest);
     }
 
     @SneakyThrows
     private void throwFrisbee(SocketRequest clientRequest) {
-        log.info(client.getInetAddress().getLocalHost() + "has sent a message of type THROW.");
+        log.info(client.getInetAddress().getLocalHost() + " has sent a message of type THROW.");
         this.otherClient.sendToClient(clientRequest);
     }
 
     @SneakyThrows
     private void startGame(SocketRequest clientRequest) {
-        log.info(client.getInetAddress().getLocalHost() + "has sent a message of type GAME_RUNNING.");
+        log.info(client.getInetAddress().getLocalHost() + " has sent a message of type GAME_RUNNING.");
         this.otherClient.sendToClient(clientRequest);
+    }
+
+    @SneakyThrows
+    private void disconnect() {
+        log.info(client.getInetAddress().getLocalHost() + " was disconnected.");
+        // remove this client thread from client map
+        SocketServer.removeClient(this.teamName, this);
+        // if other client initialized the disconnect, this.otherclient was simultaneously set to null and doesn't need
+        // to be informed again about the disconnect
+        if (this.otherClient != null) {
+            SocketRequest response = new SocketRequest(SocketRequestType.READY, "false");
+            this.otherClient.sendToClient(response);
+            // notify the other client, that this client is no longer connected by removing this client
+            this.otherClient.otherClient = null;
+            this.isRunning = false;
+        }
     }
 
     private void sendToClient(SocketRequest request) {

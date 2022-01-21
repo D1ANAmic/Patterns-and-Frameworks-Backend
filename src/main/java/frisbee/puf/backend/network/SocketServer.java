@@ -29,6 +29,10 @@ public class SocketServer implements CommandLineRunner {
         clientThreadsByTeam.get(team).add(serverThread);
     }
 
+    public static void removeClient(String team, ServerThread serverThread){
+        clientThreadsByTeam.get(team).remove(serverThread);
+    }
+
     public static Map<String, Set<ServerThread>> getClientThreadsByTeam(){
         return clientThreadsByTeam;
     }
