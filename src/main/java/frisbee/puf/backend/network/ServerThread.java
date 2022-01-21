@@ -66,7 +66,6 @@ class ServerThread extends Thread {
                 }
 
             } catch(Exception e){
-                e.printStackTrace();
                 isRunning = false;
             }
         }
@@ -128,13 +127,23 @@ class ServerThread extends Thread {
     @SneakyThrows
     private void disconnect(SocketRequest clientRequest) {
         log.info(client.getInetAddress().getLocalHost() + "has sent a message of type DISCONNECT.");
-        this.isRunning = false;
+        // remove this client thread from client map
         SocketServer.removeClient(this.teamName, this);
-        SocketRequest response = new SocketRequest(SocketRequestType.READY, "false");
-        this.otherClient.sendToClient(response);
+        // if other client initialized the disconnect, this.otherclient was simultaneously set to null and doesn't need
+        // to be informed again about the disconnect
+        if (this.otherClient == null) {
+            return;
+        } else {
+            SocketRequest response = new SocketRequest(SocketRequestType.READY, "false");
+            this.otherClient.sendToClient(response);
+            // notify the other client, that this client is no longer connected by removing this client
+            this.otherClient.otherClient = null;
+            this.isRunning = false;
+        }
     }
 
     private void sendToClient(SocketRequest request) {
+//        if (client == null) return;
         try {
             ObjectMapper mapper = new ObjectMapper();
             String jsonString = mapper.writeValueAsString(request);
