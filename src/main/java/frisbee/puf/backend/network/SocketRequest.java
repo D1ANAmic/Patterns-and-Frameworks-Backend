@@ -8,6 +8,7 @@ public class SocketRequest {
      * The RequestType instance.
      */
     private SocketRequestType requestType;
+
     /**
      * The request's value.
      */

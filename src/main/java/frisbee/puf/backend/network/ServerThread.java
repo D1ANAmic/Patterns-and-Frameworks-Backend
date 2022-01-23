@@ -1,6 +1,5 @@
 package frisbee.puf.backend.network;
 
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -16,35 +15,39 @@ import java.util.Set;
 @Slf4j
 @Component
 class ServerThread extends Thread {
-
     /**
      * The client's socket.
      */
     private Socket client;
+
     /**
      * The output stream to the client.
      */
     private ObjectOutputStream outToClient;
+
     /**
      * The input stream from the client.
      */
     private ObjectInputStream inFromClient;
+
     /**
-     * symbolizes if thread is running.
+     * Flag that indicates if a thread is running.
      */
     private boolean isRunning;
+
     /**
      * String representation of a team name.
      */
     private String teamName;
+
     /**
-     * Reference to the thread of the other player in the client' team.
+     * Reference to the thread of the other player in the clients' team.
      */
     private ServerThread otherClient;
 
 
     /**
-     * Default constructor required to autowire class.
+     * Default constructor required to autowire this class.
      */
     ServerThread() {
     }
@@ -54,7 +57,7 @@ class ServerThread extends Thread {
      * between the two sockets. In case of success the output and input
      * streams are initialized and isRunning is set to true.
      *
-     * @param client
+     * @param client the required Socket instance
      */
     ServerThread(Socket client) {
         this.client = client;
@@ -98,7 +101,6 @@ class ServerThread extends Thread {
                     case GAME_RUNNING -> startGame(clientRequest);
                     case DISCONNECT -> disconnect();
                 }
-
             } catch (Exception e) {
                 isRunning = false;
             }
