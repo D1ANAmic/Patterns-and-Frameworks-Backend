@@ -6,34 +6,58 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name= "teams")
+@Table(name = "teams")
 @Setter
 @Getter
 public class Team {
+    /**
+     * The team's id as stored in the database.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column (name = "name")
+    /**
+     * The team's name.
+     */
+    @Column(name = "name")
     private String name;
 
+    /**
+     * The left player.
+     */
     @OneToOne
     @JoinColumn(name = "player_left_id", nullable = true)
     private Player playerLeft;
 
+    /**
+     * The right player.
+     */
     @OneToOne
     @JoinColumn(name = "player_right_id", nullable = true)
     private Player playerRight;
 
-    @Column (name="level")
+    /**
+     * The team's level.
+     */
+    @Column(name = "level")
     private int level;
 
-    @Column (name="score")
+    /**
+     * The team's score.
+     */
+    @Column(name = "score")
     private int score;
 
-    @Column (name="lives")
+    /**
+     * The team's lives.
+     */
+    @Column(name = "lives")
     private int lives;
 
-    @Column (name="active")
+    /**
+     * The team's status.
+     */
+    @Column(name = "active")
     private boolean active;
 }
