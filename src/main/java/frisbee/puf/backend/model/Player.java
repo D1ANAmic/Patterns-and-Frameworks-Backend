@@ -25,7 +25,7 @@ public class Player {
     private String name;
 
     /**
-     * The player'semail.
+     * The player's email.
      */
     @Column(name = "email")
     private String email;
@@ -37,7 +37,7 @@ public class Player {
     private String password;
 
     /**
-     * Default constructor, creates a Player instance.
+     * Default constructor that creates a Player instance.
      */
     public Player() {
     }
@@ -51,7 +51,6 @@ public class Player {
      * @param password the player's password
      */
     public Player(String name, String email, String password) {
-
         this.name = name;
         this.email = email;
         this.password = password;

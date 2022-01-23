@@ -17,9 +17,10 @@ import java.util.Objects;
 public class PlayerService {
 
     /**
-     * The PlayerRepository instance that connect handles database access.
+     * The PlayerRepository instance that handles the database access.
      */
     PlayerRepository playerRepository;
+
     /**
      * Password encoder used for hashing passwords.
      */
@@ -65,8 +66,8 @@ public class PlayerService {
     /**
      * Saves a new Player object in the database and returns it.
      *
-     * @param newPlayer player object to be saved
-     * @return player object
+     * @param newPlayer Player object to be saved
+     * @return Player object
      * @throws IllegalArgumentException if player with same email already exists
      */
     public Player registerPlayer(
@@ -79,6 +80,7 @@ public class PlayerService {
                 throw new IllegalArgumentException("Player already exists!");
             }
         }
+
         newPlayer.setPassword(this.passwordEncoder.encode(
                 newPlayer.getPassword()));
         return this.playerRepository.save(newPlayer);
@@ -88,7 +90,7 @@ public class PlayerService {
      * Logs in player based on credentials and returns logged in Player object.
      *
      * @param credentials email and password of player to be logged in
-     * @return logged in player object
+     * @return logged in Player object
      * @throws NoSuchElementException if player with given email doesn't exist
      * @throws LoginException         if password is incorrect
      */
@@ -96,11 +98,13 @@ public class PlayerService {
             Map<String, String> credentials) throws NoSuchElementException,
             LoginException {
         Player player = playerRepository.findByEmail(credentials.get("email"));
+
         if (player == null) {
             log.info("Player with given email doesn't exist!");
             throw new NoSuchElementException("Player with given email doesn't"
                     + " exist!");
         }
+
         if (passwordEncoder.matches(credentials.get("password"),
                 player.getPassword())) {
             return player;
@@ -121,16 +125,18 @@ public class PlayerService {
     /**
      * Updates player name and returns Player object.
      *
-     * @param email   email of player by which player object is identified
-     * @param newName new name for player object
-     * @return player object with updated name
+     * @param email   email of player by which Player object is identified
+     * @param newName new name for Player object
+     * @return Player object with updated name
      * @throws IllegalArgumentException if new name is empty or player with
      *                                  new name already exists
      */
     public Player updatePlayerName(
             String email, String newName) throws IllegalArgumentException {
         Player currentPlayer = playerRepository.findByEmail(email);
+
         log.info("CURRENT PLAYERS NAME: " + currentPlayer.getName());
+
         if (newName != null && newName.length() > 0 && !Objects.equals(
                 currentPlayer.getName(), newName)) {
             currentPlayer.setName(newName);

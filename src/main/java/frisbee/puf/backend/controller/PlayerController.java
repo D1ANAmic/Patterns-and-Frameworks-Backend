@@ -30,14 +30,14 @@ public class PlayerController {
      */
     @RequestMapping("/")
     public String message() {
-        return "Welcome to the Frizzbee Freakz API";
+        return "Welcome to the FRIZZBEE FREAKZ API";
     }
 
     /**
      * Maps to a GET request on the players endpoint and returns
      * all registered players.
      *
-     * @return a ReponseEntity object containing the HTTP status and a list
+     * @return a ResponseEntity object containing the HTTP status and a list
      * of all Player objects that are stored in the database
      */
     @GetMapping("/players")
@@ -55,7 +55,7 @@ public class PlayerController {
      * it.
      *
      * @param newPlayer the Player object to be registered
-     * @return a responseEntity object, containing the HTTP status code and
+     * @return a ResponseEntity object, containing the HTTP status code and
      * the Player object in case of success, an IllegalArgumentException
      * otherwise
      */
@@ -77,7 +77,7 @@ public class PlayerController {
      *
      * @param credentials a map of Strings containing a player email and a
      *                    password
-     * @return a responseEntity object, containing the HTTP status code and
+     * @return a ResponseEntity object, containing the HTTP status code and
      * the Player object in case of success, an LoginException if the
      * credentials don't match and a NoSuchElementException if no record with
      * the provided email can be found
@@ -102,7 +102,7 @@ public class PlayerController {
      * and notifies the PlayerService instance to delete all players from the
      * database.
      *
-     * @return a responseEntity object, containing the HTTP status code
+     * @return a ResponseEntity object, containing the HTTP status code
      */
     @DeleteMapping("/players/delete-all")
     public ResponseEntity deletePlayers() {
@@ -117,7 +117,7 @@ public class PlayerController {
      *
      * @param email   the player's email
      * @param newName the player's new name
-     * @return a responseEntity object, containing the HTTP status code and
+     * @return a ResponseEntity object, containing the HTTP status code and
      * the Player object in case of success, an IllegalArgumentException
      * otherwise
      */
@@ -131,6 +131,5 @@ public class PlayerController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
     }
 }
