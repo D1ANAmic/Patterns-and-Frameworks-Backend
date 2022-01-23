@@ -13,9 +13,10 @@ import java.util.NoSuchElementException;
 @Service
 public class TeamService {
     /**
-     * The TeamRepository instance that connect handles database access.
+     * The TeamRepository instance that handles the database access.
      */
     TeamRepository teamRepository;
+
     /**
      * The PlayerService instance.
      */
@@ -94,7 +95,7 @@ public class TeamService {
      * @param email email of the player
      * @return list of Team objects
      * @throws NoSuchElementException if no player with the provided
-     *                                email or no active team exist
+     *                                email or no active team exists
      */
     public List<Team> getActiveTeamByPlayer(
             String email) throws NoSuchElementException {
@@ -117,7 +118,7 @@ public class TeamService {
     /**
      * Creates a new team and returns it.
      *
-     * @param name name of team
+     * @param name name of the team
      * @return created Team object
      * @throws IllegalArgumentException if team name already exists
      */
@@ -135,7 +136,8 @@ public class TeamService {
         newTeam.setLives(5);
         newTeam.setScore(0);
         newTeam.setActive(true);
-        //save and return
+
+        // save and return
         return this.teamRepository.save(newTeam);
     }
 
@@ -154,7 +156,6 @@ public class TeamService {
             IllegalArgumentException {
         Team team = this.getTeamByName(teamName);
         Player player = this.playerService.getPlayerByEmail(playerEmail);
-
         if ((team.getPlayerLeft() != null && team.getPlayerLeft()
                 .equals(player)) || (team.getPlayerRight() != null
                 && team.getPlayerRight().equals(player))) {
@@ -171,7 +172,7 @@ public class TeamService {
             team.setPlayerRight(player);
             return this.teamRepository.save(team);
         } else {
-            // all places already taken
+            // all places are already taken
             log.info("Team already full.");
             throw new IllegalArgumentException("Team is already full.");
         }

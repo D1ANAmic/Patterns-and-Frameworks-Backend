@@ -24,20 +24,6 @@ public class Team {
     private String name;
 
     /**
-     * The left player.
-     */
-    @OneToOne
-    @JoinColumn(name = "player_left_id", nullable = true)
-    private Player playerLeft;
-
-    /**
-     * The right player.
-     */
-    @OneToOne
-    @JoinColumn(name = "player_right_id", nullable = true)
-    private Player playerRight;
-
-    /**
      * The team's level.
      */
     @Column(name = "level")
@@ -60,4 +46,18 @@ public class Team {
      */
     @Column(name = "active")
     private boolean active;
+
+    /**
+     * The left player.
+     */
+    @OneToOne
+    @JoinColumn(name = "player_left_id", nullable = true)
+    private Player playerLeft;
+
+    /**
+     * The right player.
+     */
+    @OneToOne
+    @JoinColumn(name = "player_right_id", nullable = true)
+    private Player playerRight;
 }

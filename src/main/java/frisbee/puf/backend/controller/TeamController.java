@@ -25,7 +25,7 @@ public class TeamController {
      * Maps to a get request on the teams endpoint and returns all existing
      * teams.
      *
-     * @return a ReponseEntity object containing the HTTP status and a list
+     * @return a ResponseEntity object containing the HTTP status and a list
      * of all Team objects that are stored in the database
      */
     @GetMapping("/teams")
@@ -43,7 +43,7 @@ public class TeamController {
      * corresponding Team object.
      *
      * @param name the team's name
-     * @return a ReponseEntity object, containing the HTTP status and the Team
+     * @return a ResponseEntity object, containing the HTTP status and the Team
      * object in case of success, a NoSuchElementException otherwise
      */
     @GetMapping("/teams/{name}")
@@ -63,7 +63,7 @@ public class TeamController {
      * to get all teams this particular player is a member of.
      *
      * @param email the player's email
-     * @return a ReponseEntity object, containing the HTTP status and a list
+     * @return a ResponseEntity object, containing the HTTP status and a list
      * of Team objects in case of success, a NoSuchElementException otherwise
      */
     @GetMapping("/teams/player/{email}")
@@ -84,7 +84,7 @@ public class TeamController {
      * in order to get all active teams this particular player is a member of.
      *
      * @param email the player's email
-     * @return a ReponseEntity object, containing the HTTP status and a list
+     * @return a ResponseEntity object, containing the HTTP status and a list
      * of Team objects in case of success, a NoSuchElementException otherwise
      */
     @GetMapping("/teams/player/{email}/active")
@@ -105,8 +105,8 @@ public class TeamController {
      * new team with the provided name.
      *
      * @param name the team's name
-     * @return a ReponseEntity object, containing the HTTP status and the
-     * team object in case of success, a IllegalArgumentException otherwise
+     * @return a ResponseEntity object, containing the HTTP status and the
+     * team object in case of success, an IllegalArgumentException otherwise
      */
     @PostMapping("/teams/create")
     public ResponseEntity<?> createTeam(@RequestBody String name) {
@@ -125,7 +125,7 @@ public class TeamController {
      * order to add the player to an existing team.
      *
      * @param objectNode contains the team's name and the player's email
-     * @return a ReponseEntity object, containing the HTTP status and the
+     * @return a ResponseEntity object, containing the HTTP status and the
      * team object in case of success, an Exception otherwise
      */
     @PostMapping("/teams/join")
@@ -149,7 +149,7 @@ public class TeamController {
      *
      * @param objectNode contains the team's name, level, score, lives and
      *                   status
-     * @return a ReponseEntity object, containing the HTTP status and the
+     * @return a ResponseEntity object, containing the HTTP status and the
      * team object in case of success, an Exception otherwise
      */
     @PutMapping("/teams/update")
