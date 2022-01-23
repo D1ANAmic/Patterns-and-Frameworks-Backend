@@ -13,6 +13,8 @@ public class SocketRequest {
      */
     private String value;
 
+    public SocketRequest(){}
+
     /**
      * Constructs a SocketRequest object with the provided request type and
      * value.
