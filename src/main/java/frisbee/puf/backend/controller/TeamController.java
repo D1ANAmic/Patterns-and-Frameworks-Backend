@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -49,9 +51,11 @@ public class TeamController {
     @GetMapping("/teams/{name}")
     public ResponseEntity<?> getTeamByName(@PathVariable("name") String name) {
         try {
-            Team team = this.teamService.getTeamByName(name);
+            String decodedName = URLDecoder.decode(name,
+                    StandardCharsets.UTF_8.toString());
+            Team team = this.teamService.getTeamByName(decodedName);
             return new ResponseEntity<>(team, HttpStatus.OK);
-        } catch (NoSuchElementException exception) {
+        } catch (Exception exception) {
             return new ResponseEntity<>(exception.getMessage(),
                     HttpStatus.NOT_FOUND);
         }
