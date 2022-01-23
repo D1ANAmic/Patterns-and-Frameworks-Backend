@@ -51,7 +51,7 @@ public class SocketServer implements CommandLineRunner {
      * Removes a client thread from the map of currently running threads on
      * server.
      *
-     * @param team         nem of the team this thread's player is a member of
+     * @param team         name of the team this thread's player is a member of
      * @param serverThread the thread that represents the client connection
      */
     public static void removeClient(String team, ServerThread serverThread) {
