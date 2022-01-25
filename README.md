@@ -48,8 +48,9 @@ Die App läuft auf Port 8080 unter den im PlayerController festgelegten Routen:
 Vorerst:
 http://localhost:8080/api/players und http://localhost:8080/api/players/{id}
 
-## Tests starten
-TBD
+## Dokumentation
+Die Dokumentation wird mit `mvn javadoc:javadoc` erstellt. Sie kann dann
+unter `documentation/apidocs/index.html` aufgerufen werden.
 
 ## Frameworks und libraries
 Für das Backend verwenden wir Spring Boot mit folgenden Dependencies:
