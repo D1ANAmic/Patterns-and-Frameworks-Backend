@@ -229,7 +229,7 @@ Die REST API funktioniert als Schnittstelle, durch welche der Client auf die in 
 
 Die Echtzeit-Kommunikation zwischen Client und Server erfolgt über Sockets. Sie erfüllt den Zweck, die Spielansicht beider Clients synchron zu halten.
 
-Als Protokoll wird ein SocketRequest-Objekt benutzt, welches aus einem SocketRequestType und einem zugeordneten Wert besteht. Es existieren sechs verschiedene SocketRequest-Typen:
+Als Protokoll wird ein SocketRequest-Objekt benutzt, welches aus einem SocketRequestType und einem zugeordneten Wert besteht. Dieses wird vor der Übertragung zu einem String konvertiert. Es existieren sechs verschiedene SocketRequest-Typen:
 
 **INIT**
 * *Beschreibung*: Ordnet serverseitig den Client-Thread anhand dessen Team in einen Pool von verbundenen Clients ein und informiert den Client des zweiten Spielers, ob ein Spiel begonnen werden kann.
