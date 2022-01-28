@@ -218,3 +218,40 @@ Die REST API funktioniert als Schnittstelle, durch welche der Client auf die in 
     * `CREATED` - falls erfolgreich aktualisiert
     * `NOT_FOUND` - falls Team nicht existiert
 
+###Socket
+
+Die Echtzeit-Kommunikation zwischen Client und Server erfolgt über Sockets. Sie erfüllt den Zweck, die Spielansicht beider Clients synchron zu halten.
+
+Als Protokoll wird ein SocketRequest-Objekt benutzt, welches aus einem SocketRequestType und einem serialisierten JSON-Objekt als Payload-String besteht. Es existieren sechs verschiedene SocketRequest-Typen:
+
+**INIT**
+* *Beschreibung*: Ordnet serverseitig den Client-Thread anhand dessen Team in einen Pool von verbundenen Clients ein und informiert den Client des zweiten Spielers, ob ein Spiel begonnen werden kann.
+* *Payload*:
+  * Team-Name
+
+**READY**
+* *Beschreibung*: Informiert einen Client darüber, ob der jeweils andere Spieler anwesend und bereit zum Spielen ist.
+* *Payload*:
+  * `true` - falls der zweite Spieler sich auf dem Wartebildschirm eingefunden hat und das Spiel begonnen werden kann
+  * `false` - falls sich der zweite Spieler noch nicht auf dem Wartebildschirm eingefunden hat
+
+**GAME_RUNNING**
+* *Beschreibung*: Informiert den zweiten Client über den Spielstatus des ersten Clients
+* *Payload*:
+  * Spielstatus (`START`, `PAUSE`, `RESUME`, `CONTINUE`)
+
+**MOVE**
+* *Beschreibung*: Synchronisiert die Bewegungen der Spieler für beide Clients
+* *Payload*:
+  * Bewegungsrichtung eines Spielers (`UP`, `LEFT`, `RIGHT`)
+
+**THROW**
+* *Beschreibung*: Synchronisiert die Frisbee-Position beider Clients
+* *Payload*:
+  * Frisbee-Geschwindigkeit in X und Y Richtung
+
+**DISCONNECT**
+* *Beschreibung*: Bricht die Verbindung eines Clients ab, löscht den Client-Thread aus dem Pool der verbundenen Clients und informiert den Client des zweiten Spielers.
+* *Payload*:
+  * true
+
