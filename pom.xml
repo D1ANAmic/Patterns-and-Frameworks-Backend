@@ -50,6 +50,12 @@
             <artifactId>flyway-core</artifactId>
             <version>8.3.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.6.5</version>
+        </dependency>
+
     </dependencies>
 
     <packaging>jar</packaging>
