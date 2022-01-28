@@ -2,6 +2,7 @@ package frisbee.puf.backend.controller;
 
 import frisbee.puf.backend.model.Player;
 import frisbee.puf.backend.service.PlayerService;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ public class PlayerController {
      *
      * @return a welcome message
      */
+    @Hidden
     @RequestMapping("/")
     public String message() {
         return "Welcome to the FRIZZBEE FREAKZ API";
