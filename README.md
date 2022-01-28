@@ -70,6 +70,9 @@ http://localhost:8080/api/
 
 im Browser aufgerufen werden.
 
+## Dokumentation
+Die Dokumentation wird mit `mvn javadoc:javadoc` erstellt. Sie kann dann
+unter `documentation/apidocs/index.html` aufgerufen werden.
 ## Architekturentscheidungen
 
 Um den Zugriff auf die Datenbank so einfach wie möglich zu gestalten und die Datenpersistierung zu garantieren, haben wir uns im Backend für eine Spring-Boot-Anwendung mit integrierter JPA-Dependency entschieden.
