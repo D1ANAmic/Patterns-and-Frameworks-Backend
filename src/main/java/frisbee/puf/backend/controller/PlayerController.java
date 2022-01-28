@@ -3,6 +3,10 @@ package frisbee.puf.backend.controller;
 import frisbee.puf.backend.model.Player;
 import frisbee.puf.backend.service.PlayerService;
 import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +46,7 @@ public class PlayerController {
      * @return a ResponseEntity object containing the HTTP status and a list
      * of all Player objects that are stored in the database
      */
+    @Operation(summary = "Find all players")
     @GetMapping("/players")
     public ResponseEntity<List<Player>> getAllPlayers() {
 
@@ -61,8 +66,17 @@ public class PlayerController {
      * the Player object in case of success, an IllegalArgumentException
      * otherwise
      */
+    @Operation(summary = "Create new player")
+    @ApiResponse(responseCode = "201", description = "Player created",
+            content = @Content(schema = @Schema(implementation = Player.class)))
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = @Content(schema = @Schema(example = "{\"name\": " +
+                    "\"Player 1\", \"email\": \"test@test.de\", " +
+                    "\"password\": \"pw123\"}"))
+    )
     @PostMapping("/players/register")
-    public ResponseEntity registerPlayer(@RequestBody Player newPlayer) {
+    public ResponseEntity<?> registerPlayer(@RequestBody Player newPlayer) {
         try {
             Player registeredPlayer =
                     this.playerService.registerPlayer(newPlayer);
@@ -84,6 +98,15 @@ public class PlayerController {
      * credentials don't match and a NoSuchElementException if no record with
      * the provided email can be found
      */
+    @Operation(summary = "Find player by email and password")
+    @ApiResponse(responseCode = "200", description = "Player found",
+            content = @Content(schema = @Schema(implementation = Player.class)))
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @ApiResponse(responseCode = "404", description = "Player not found")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = @Content(schema = @Schema(example = "{\"email\": " +
+                    "\"test@test.de\", \"password\": \"pw123\"}"))
+    )
     @PostMapping("/players/login")
     public ResponseEntity loginPlayer(
             @RequestBody Map<String, String> credentials) {
@@ -106,6 +129,8 @@ public class PlayerController {
      *
      * @return a ResponseEntity object, containing the HTTP status code
      */
+    @Operation(summary = "Delete all players")
+    @ApiResponse(responseCode = "200", description = "All players deleted")
     @DeleteMapping("/players/delete-all")
     public ResponseEntity deletePlayers() {
         this.playerService.deleteAllPlayers();
@@ -123,6 +148,13 @@ public class PlayerController {
      * the Player object in case of success, an IllegalArgumentException
      * otherwise
      */
+    @Operation(summary = "Find player by email and update name")
+    @ApiResponse(responseCode = "200", description = "Player updated",
+            content = @Content(schema = @Schema(implementation = Player.class)))
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = @Content(schema = @Schema(example = "New player name"))
+    )
     @PutMapping("/players/update-player-name/{email}")
     public ResponseEntity updatePlayerName(@PathVariable("email") String email,
                                            @RequestBody String newName) {
