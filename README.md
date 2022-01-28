@@ -1,13 +1,13 @@
-# Beschreibung Patterns-and-Frameworks
+# Beschreibung
 
 Spring Boot Backend für das
 Semesterprojekt https://github.com/wernerbreitenstein/Patterns-and-Frameworks
 
 # Development
 
-## Voraussetungen
+## Voraussetzungen
 
-PostgreSQL muss lokal installiert sein.
+PostgreSQL und JDK müssen lokal installiert sein.
 
 ## Application Properties
 
@@ -26,7 +26,13 @@ Sicherheitsgründen sollten diese bei einer lokalen Installation umbenannt
 werden. Die festgelegten Credentials müssen mit denen, die beim Erstellen der
 Datanbank angegeben werden, übereinstimmen.
 
-## Setup Datenbank
+## Datenbank
+
+###  Datenbankmanagementsystem
+
+PostgreSQL
+
+### Setup Datenbank
 
 (Im Folgenden ggf. "frisbee" mit den in `application.properties` festgelegten
 Bezeichnern ersetzen)
@@ -45,7 +51,7 @@ Datenbank erstellen:
 
 `$ sudo -u postgres createdb frisbee -O frisbee`
 
-Anschließend Postgres neustarten.
+Anschließend Postgres neu starten.
 
 ### Datenbankmigrationen
 
@@ -58,16 +64,13 @@ siehe https://www.baeldung.com/database-migrations-with-flyway#generate-versione
 
 Das Backend kann über die Klasse `BackendApplication` gestartet werden.
 
-Die App läuft auf Port 8080 unter den im PlayerController festgelegten Routen:
+Die App läuft auf Port 8080 und kann unter
 
-Vorerst:
-http://localhost:8080/api/players und http://localhost:8080/api/players/{id}
+http://localhost:8080/api/
 
-## Tests starten
+im Browser aufgerufen werden.
 
-TBD
-
-## Frameworks und libraries
+## Frameworks und Libraries
 
 Für das Backend verwenden wir Spring Boot mit folgenden Dependencies:
 
@@ -75,7 +78,7 @@ Für das Backend verwenden wir Spring Boot mit folgenden Dependencies:
 * Spring Data JPA
 * Spring Web
 * Lombok
+* Spring Security
+* Flyway
+* Springdoc + Swagger UI
 
-## Datenbank
-
-PostgreSQL: https://www.postgresql.org
