@@ -84,3 +84,7 @@ PostgreSQL: https://www.postgresql.org
 
 Nach dem Start der Applikation ist die Dokumentation der Endpunkte über eine 
 Swagger UI unter `localhost:8080/swagger-ui/index.html` erreichbar. 
+
+Die Dokumentation als JSON ist unter `http://localhost:8080/api-docs` 
+erreichbar oder kann direkt in `documentation/swagger/swagger.json` 
+eingesehen werden.
