@@ -142,11 +142,12 @@ Die REST API funktioniert als Schnittstelle, durch welche der Client auf die in 
 * *HTTP Status*:
     * `OK` - bei erfolgreicher Löschung
 
-**/api/players/login**
+**/players/update-player-name/{email}**
 
 * *Beschreibung*: Aktualisiert den Spielernamen
 * *Request Type*: `PUT`
-* *Request Body*: Email `String` , Neuer Name `String` 
+* *Path Variable*: Email `String`
+* *Request Body*: Neuer Name `String` 
 * *Response Object*: Aktualisierter Spieler  `Player`
 * *HTTP Status*:
     * `OK` - falls erfolgreiche Aktualisierung
@@ -168,24 +169,27 @@ Die REST API funktioniert als Schnittstelle, durch welche der Client auf die in 
 
 * *Beschreibung*: Gibt das Team Objekt anhand des Namens zurück
 * *Request Type*: `GET`
+* *Path Variable*: Name `String`
 * *Response Object*: Team-Objekt `Team`
 * *HTTP Status*:
     * `OK` - falls Anfrage erfolgreich
-    * `NO_CONTENT` - falls kein Team mit dem Namen existiert
+    * `NOT_FOUND` - falls kein Team mit dem Namen existiert
 
-**/api/teams/{email}**
+**/teams/player/{email}**
 
-* *Beschreibung*: Gibt das Team Objekt anhand der Email zurück
+* *Beschreibung*: Gibt alle Teams eines Spielers zurück
 * *Request Type*: `GET`
-* *Response Object*: Team-Objekt `Team`
+* *Path Variable*: Email `String`
+* *Response Object*: Liste von Team-Objekten `Team`
 * *HTTP Status*:
     * `OK` - falls Anfrage erfolgreich
-    * `NO_CONTENT` - falls kein Team mit der Email existiert
+    * `NOT_FOUND` - falls kein Team mit der Email existiert
 
 **/api/teams/{email}/active**
 
-* *Beschreibung*: Gibt alle aktiven Teams eines spielers zurück
+* *Beschreibung*: Gibt alle aktiven Teams eines Spielers zurück
 * *Request Type*: `GET`
+* *Path Variable*: Email `String`
 * *Response Object*: Liste von Team-Objekten `List<Team>`
 * *HTTP Status*:
     * `OK` - falls Anfrage erfolgreich
@@ -201,7 +205,7 @@ Die REST API funktioniert als Schnittstelle, durch welche der Client auf die in 
     * `CREATED` - falls erfolgreich erstellt
     * `BAD_REQUEST` - falls Team bereits existiert
 
-**/api/teams/create**
+**/api/teams/join**
 
 * *Beschreibung*: Ordnet Spieler einem Team zu
 * *Request Type*: `POST`
@@ -225,7 +229,7 @@ Die REST API funktioniert als Schnittstelle, durch welche der Client auf die in 
 
 Die Echtzeit-Kommunikation zwischen Client und Server erfolgt über Sockets. Sie erfüllt den Zweck, die Spielansicht beider Clients synchron zu halten.
 
-Als Protokoll wird ein SocketRequest-Objekt benutzt, welches aus einem SocketRequestType und einem serialisierten JSON-Objekt als Payload-String besteht. Es existieren sechs verschiedene SocketRequest-Typen:
+Als Protokoll wird ein SocketRequest-Objekt benutzt, welches aus einem SocketRequestType und einem zugeordneten Wert besteht. Es existieren sechs verschiedene SocketRequest-Typen:
 
 **INIT**
 * *Beschreibung*: Ordnet serverseitig den Client-Thread anhand dessen Team in einen Pool von verbundenen Clients ein und informiert den Client des zweiten Spielers, ob ein Spiel begonnen werden kann.
@@ -236,7 +240,7 @@ Als Protokoll wird ein SocketRequest-Objekt benutzt, welches aus einem SocketReq
 * *Beschreibung*: Informiert einen Client darüber, ob der jeweils andere Spieler anwesend und bereit zum Spielen ist.
 * *Payload*:
   * `true` - falls der zweite Spieler sich auf dem Wartebildschirm eingefunden hat und das Spiel begonnen werden kann
-  * `false` - falls sich der zweite Spieler noch nicht auf dem Wartebildschirm eingefunden hat
+  * `false` - falls sich der zweite Spieler noch nicht auf dem Wartebildschirm eingefunden oder abgemeldet hat
 
 **GAME_RUNNING**
 * *Beschreibung*: Informiert den zweiten Client über den Spielstatus des ersten Clients
