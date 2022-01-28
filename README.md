@@ -79,3 +79,8 @@ Für das Backend verwenden wir Spring Boot mit folgenden Dependencies:
 ## Datenbank
 
 PostgreSQL: https://www.postgresql.org
+
+# API Dokumentation
+
+Nach dem Start der Applikation ist die Dokumentation der Endpunkte über eine 
+Swagger UI unter `localhost:8080/swagger-ui/index.html` erreichbar. 
