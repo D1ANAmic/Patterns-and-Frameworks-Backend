@@ -91,3 +91,130 @@ Für das Backend verwenden wir Spring Boot mit folgenden Dependencies:
 * Flyway
 * Springdoc + Swagger UI
 
+## Client-Server-Communication
+
+Das Frisbee Backend stellt sowohl eine REST API für HTTP Requests als auch einen Socket für bi-direktionale Verbindungen in Echtzeit zur Verfügung.
+
+###REST API
+
+Die REST API funktioniert als Schnittstelle, durch welche der Client auf die in der Datenbank gespeicherten Spieldaten Zugriff erhält. Die Endpunkte können nach Manipulation und Abfragen von Player- und Team-Daten unterschieden werden.
+
+####<u>Player</u>
+
+**/api/players**
+
+* *Beschreibung*: Gibt alle registrierten Spieler als Liste zurück
+* *Request Type*: `GET`
+* *Response Object*: Liste von Spieler-Objekten `List<Player>`
+* *HTTP Status*: 
+  * `OK` - falls Anfrage erfolgreich
+  * `NO_CONTENT` - falls keine Player-Objekte in der Datenbank vorhanden
+  
+**/api/players/register**
+
+* *Beschreibung*: Registriert einen Spieler
+* *Request Type*: `POST`
+* *Request Body*: Spieler-Objekt `Player`
+* *Response Object*: Registrierter Spieler `Player`
+* *HTTP Status*:
+    * `CREATED` - falls erfolgreich in Datenbank gespeichert
+    * `BAD_REQUEST` - falls Spieler bereits existiert 
+
+**/api/players/login**
+
+* *Beschreibung*: Meldet einen Spieler an
+* *Request Type*: `POST`
+* *Request Body*: Spieler Email und Passwort `Map<String, String>`
+* *Response Object*: Registrierter Spieler `Player`
+* *HTTP Status*:
+    * `OK` - falls erfolgreiche Anmeldung
+    * `BAD_REQUEST` - falls das falsche Passwort eingegeben wurde
+    * `NOT_FOUND` - falls Spieler mit diesen Anmeldedaten nicht existiert
+
+**/api/players/delete-all**
+
+* *Beschreibung*: Löscht alle registrierten Spieler
+* *Request Type*: `DELETE`
+* *Response Object*: - 
+* *HTTP Status*:
+    * `OK` - bei erfolgreicher Löschung
+
+**/api/players/login**
+
+* *Beschreibung*: Aktualisiert den Spielernamen
+* *Request Type*: `PUT`
+* *Request Body*: Email `String` , Neuer Name `String` 
+* *Response Object*: Aktualisierter Spieler  `Player`
+* *HTTP Status*:
+    * `OK` - falls erfolgreiche Aktualisierung
+    * `BAD_REQUEST` - falls neuer Name dem alten entspricht oder leere Zeichenkette
+
+
+####<u>Team</u>
+
+**/api/teams**
+
+* *Beschreibung*: Gibt alle Teams als Liste zurück
+* *Request Type*: `GET`
+* *Response Object*: Liste von Team-Objekten `List<Team>`
+* *HTTP Status*:
+    * `OK` - falls Anfrage erfolgreich
+    * `NO_CONTENT` - falls keine Teams in der Datenbank vorhanden
+    
+**/api/teams/{name}**
+
+* *Beschreibung*: Gibt das Team Objekt anhand des Namens zurück
+* *Request Type*: `GET`
+* *Response Object*: Team-Objekt `Team`
+* *HTTP Status*:
+    * `OK` - falls Anfrage erfolgreich
+    * `NO_CONTENT` - falls kein Team mit dem Namen existiert
+
+**/api/teams/{email}**
+
+* *Beschreibung*: Gibt das Team Objekt anhand der Email zurück
+* *Request Type*: `GET`
+* *Response Object*: Team-Objekt `Team`
+* *HTTP Status*:
+    * `OK` - falls Anfrage erfolgreich
+    * `NO_CONTENT` - falls kein Team mit der Email existiert
+
+**/api/teams/{email}/active**
+
+* *Beschreibung*: Gibt alle aktiven Teams eines spielers zurück
+* *Request Type*: `GET`
+* *Response Object*: Liste von Team-Objekten `List<Team>`
+* *HTTP Status*:
+    * `OK` - falls Anfrage erfolgreich
+    * `NOT_FOUND` - falls Spieler mit der Email nicht existiert oder keine aktiven Teams besitzt
+
+**/api/teams/create**
+
+* *Beschreibung*: Erstellt ein Team
+* *Request Type*: `POST`
+* *Request Body*: Team-Name`String`
+* *Response Object*: Erstelltes Team `Team`
+* *HTTP Status*:
+    * `CREATED` - falls erfolgreich erstellt
+    * `BAD_REQUEST` - falls Team bereits existiert
+
+**/api/teams/create**
+
+* *Beschreibung*: Ordnet Spieler einem Team zu
+* *Request Type*: `POST`
+* *Request Body*: Team-Name und Spieler-Email als `ObjectNode`
+* *Response Object*: Team-Objekt `Team`
+* *HTTP Status*:
+    * `CREATED` - falls erfolgreich erstellt
+    * `BAD_REQUEST` - falls Team bereits voll ist oder Spieler schon im Team ist
+
+**/api/teams/update**
+
+* *Beschreibung*: Aktualisiert die Team-Eigenschaften
+* *Request Type*: `PUT`
+* *Request Body*: Team-Name, Level, Punktestand, Leben und Aktivitätsstatus als `ObjectNode`
+* *Response Object*: Team-Objekt `Team`
+* *HTTP Status*:
+    * `CREATED` - falls erfolgreich aktualisiert
+    * `NOT_FOUND` - falls Team nicht existiert
+
