@@ -70,6 +70,15 @@ http://localhost:8080/api/
 
 im Browser aufgerufen werden.
 
+## Architekturentscheidungen
+
+Um den Zugriff auf die Datenbank so einfach wie möglich zu gestalten und die Datenpersistierung zu garantieren, haben wir uns im Backend für eine Spring-Boot-Anwendung mit integrierter JPA-Dependency entschieden.
+
+Die Architektur des Backends ist als 3-Tier-Modell konstruiert:
+* Die Data-Access-Layer greift auf die Datenbank zu
+* Die Service-Layer kümmert sich um die Business-Logik
+* Die API-Layer stellt Endpunkte für den Zugriff durch die Clients zur Verfügung
+
 ## Frameworks und Libraries
 
 Für das Backend verwenden wir Spring Boot mit folgenden Dependencies:
