@@ -3,6 +3,11 @@ package frisbee.puf.backend.controller;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import frisbee.puf.backend.model.Team;
 import frisbee.puf.backend.service.TeamService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +35,7 @@ public class TeamController {
      * @return a ResponseEntity object containing the HTTP status and a list
      * of all Team objects that are stored in the database
      */
+    @Operation(summary = "Find all teams")
     @GetMapping("/teams")
     public ResponseEntity<List<Team>> getTeams() {
 
@@ -48,7 +54,11 @@ public class TeamController {
      * @return a ResponseEntity object, containing the HTTP status and the Team
      * object in case of success, a NoSuchElementException otherwise
      */
+    @Operation(summary = "Find team by name")
     @GetMapping("/teams/{name}")
+    @ApiResponse(responseCode = "200", description = "Team found",
+            content = @Content(schema = @Schema(implementation = Team.class)))
+    @ApiResponse(responseCode = "404", description = "Team not found")
     public ResponseEntity<?> getTeamByName(@PathVariable("name") String name) {
         try {
             String decodedName = URLDecoder.decode(name,
@@ -70,6 +80,11 @@ public class TeamController {
      * @return a ResponseEntity object, containing the HTTP status and a list
      * of Team objects in case of success, a NoSuchElementException otherwise
      */
+    @Operation(summary = "Find teams for player")
+    @ApiResponse(responseCode = "200", description = "Team for player found",
+            content = @Content(array = @ArraySchema(schema =
+            @Schema(implementation = Team.class))))
+    @ApiResponse(responseCode = "404", description = "Team not found")
     @GetMapping("/teams/player/{email}")
     public ResponseEntity<?> getTeamByPlayer(
             @PathVariable("email") String email) {
@@ -91,6 +106,12 @@ public class TeamController {
      * @return a ResponseEntity object, containing the HTTP status and a list
      * of Team objects in case of success, a NoSuchElementException otherwise
      */
+    @Operation(summary = "Find active teams for player")
+    @ApiResponse(responseCode = "200", description = "Active team for player " +
+            "found",
+            content = @Content(array = @ArraySchema(schema =
+            @Schema(implementation = Team.class))))
+    @ApiResponse(responseCode = "404", description = "Team not found")
     @GetMapping("/teams/player/{email}/active")
     public ResponseEntity<?> getActiveTeamByPlayer(
             @PathVariable("email") String email) {
@@ -112,6 +133,13 @@ public class TeamController {
      * @return a ResponseEntity object, containing the HTTP status and the
      * team object in case of success, an IllegalArgumentException otherwise
      */
+    @Operation(summary = "Create team")
+    @ApiResponse(responseCode = "201", description = "Team created",
+            content = @Content(schema = @Schema(implementation = Team.class)))
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Name" +
+            " of the team", content = @Content(schema = @Schema(example = "My" +
+            " awesome team")))
     @PostMapping("/teams/create")
     public ResponseEntity<?> createTeam(@RequestBody String name) {
         try {
@@ -132,6 +160,13 @@ public class TeamController {
      * @return a ResponseEntity object, containing the HTTP status and the
      * team object in case of success, an Exception otherwise
      */
+    @Operation(summary = "Join team")
+    @ApiResponse(responseCode = "201", description = "Team joined",
+            content = @Content(schema = @Schema(implementation = Team.class)))
+    @ApiResponse(responseCode = "400", description = "Bad request")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(content =
+    @Content(schema = @Schema(example = "{\"teamName\": \"My awesome team\", " +
+            "\"playerEmail\": \"test@test.de\"}")))
     @PostMapping("/teams/join")
     public ResponseEntity<?> joinTeam(@RequestBody ObjectNode objectNode) {
         String teamName = objectNode.get("teamName").asText();
@@ -156,6 +191,14 @@ public class TeamController {
      * @return a ResponseEntity object, containing the HTTP status and the
      * team object in case of success, an Exception otherwise
      */
+    @Operation(summary = "Update team")
+    @ApiResponse(responseCode = "201", description = "Team updated",
+            content = @Content(schema = @Schema(implementation = Team.class)))
+    @ApiResponse(responseCode = "404", description = "Team not found")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(content =
+    @Content(schema = @Schema(example =
+            "{\"name\": \"My awesome team\", \"level\": 2, \"score\": 15, " +
+                    "\"lives\": 4, \"active\": true}")))
     @PutMapping("/teams/update")
     public ResponseEntity<?> updateTeam(@RequestBody ObjectNode objectNode) {
         String name = objectNode.get("name").asText();
