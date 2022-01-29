@@ -34,7 +34,7 @@ Datanbank angegeben werden, übereinstimmen.
 
 ## Datenbank
 
-###  Datenbankmanagementsystem
+### Datenbankmanagementsystem
 
 PostgreSQL
 
@@ -70,20 +70,22 @@ siehe https://www.baeldung.com/database-migrations-with-flyway#generate-versione
 
 Das Backend kann über die Klasse `BackendApplication` gestartet werden.
 
-Die App läuft auf Port 8080 und kann unter
-
-http://localhost:8080/api/
-
-im Browser aufgerufen werden.
+Die App läuft auf Port 8080. Nach dem Start ist die Dokumentation der Endpunkte
+über die Swagger UI unter `localhost:8080/swagger-ui/index.html` erreichbar.
 
 ## Dokumentation
+
 Die Dokumentation wird mit `mvn javadoc:javadoc` erstellt. Sie kann dann
 unter `documentation/apidocs/index.html` aufgerufen werden.
+
 ## Architekturentscheidungen
 
-Um den Zugriff auf die Datenbank so einfach wie möglich zu gestalten und die Datenpersistierung zu garantieren, haben wir uns im Backend für eine Spring-Boot-Anwendung mit integrierter JPA-Dependency entschieden.
+Um den Zugriff auf die Datenbank so einfach wie möglich zu gestalten und die
+Datenpersistierung zu garantieren, haben wir uns im Backend für eine
+Spring-Boot-Anwendung mit integrierter JPA-Dependency entschieden.
 
 Die Architektur des Backends ist als 3-Tier-Modell konstruiert:
+
 * Die Data-Access-Layer greift auf die Datenbank zu
 * Die Service-Layer kümmert sich um die Business-Logik
 * Die API-Layer stellt Endpunkte für den Zugriff durch die Clients zur Verfügung
@@ -102,23 +104,34 @@ Für das Backend verwenden wir Spring Boot mit folgenden Dependencies:
 
 ## Client-Server-Communication
 
-Das Frisbee Backend stellt sowohl eine REST API für HTTP Requests als auch einen Socket für bi-direktionale Verbindungen in Echtzeit zur Verfügung.
+Das Frisbee Backend stellt sowohl eine REST API für HTTP Requests als auch einen
+Socket für bi-direktionale Verbindungen in Echtzeit zur Verfügung.
 
-###REST API
+### REST API
 
-Die REST API funktioniert als Schnittstelle, durch welche der Client auf die in der Datenbank gespeicherten Spieldaten Zugriff erhält. Die Endpunkte können nach Manipulation und Abfragen von Player- und Team-Daten unterschieden werden.
+Die REST API funktioniert als Schnittstelle, durch welche der Client auf die in
+der Datenbank gespeicherten Spieldaten Zugriff erhält. Die Endpunkte können nach
+Manipulation und Abfragen von Player- und Team-Daten unterschieden werden.
 
-####<u>Player</u>
+Nachfolgend befindet sich eine Kurzbeschreibung der existierenden Endpunkte.
+
+Nach dem Start der Applikation ist die Dokumentation der Endpunkte auch über die
+Swagger UI unter `localhost:8080/swagger-ui/index.html` erreichbar.
+Alternativ gibt es die Möglichkeit, die Dokumentation als JSON unter
+`http://localhost:8080/api-docs` abzurufen. Der aktuelle Stand ist auch
+direkt im Respository (`documentation/swagger/swagger.json`) verfügbar.
+
+#### <u>Player</u>
 
 **/api/players**
 
 * *Beschreibung*: Gibt alle registrierten Spieler als Liste zurück
 * *Request Type*: `GET`
 * *Response Object*: Liste von Spieler-Objekten `List<Player>`
-* *HTTP Status*: 
-  * `OK` - falls Anfrage erfolgreich
-  * `NO_CONTENT` - falls keine Player-Objekte in der Datenbank vorhanden
-  
+* *HTTP Status*:
+    * `OK` - falls Anfrage erfolgreich
+    * `NO_CONTENT` - falls keine Player-Objekte in der Datenbank vorhanden
+
 **/api/players/register**
 
 * *Beschreibung*: Registriert einen Spieler
@@ -127,7 +140,7 @@ Die REST API funktioniert als Schnittstelle, durch welche der Client auf die in 
 * *Response Object*: Registrierter Spieler `Player`
 * *HTTP Status*:
     * `CREATED` - falls erfolgreich in Datenbank gespeichert
-    * `BAD_REQUEST` - falls Spieler bereits existiert 
+    * `BAD_REQUEST` - falls Spieler bereits existiert
 
 **/api/players/login**
 
@@ -144,7 +157,7 @@ Die REST API funktioniert als Schnittstelle, durch welche der Client auf die in 
 
 * *Beschreibung*: Löscht alle registrierten Spieler
 * *Request Type*: `DELETE`
-* *Response Object*: - 
+* *Response Object*: -
 * *HTTP Status*:
     * `OK` - bei erfolgreicher Löschung
 
@@ -153,14 +166,14 @@ Die REST API funktioniert als Schnittstelle, durch welche der Client auf die in 
 * *Beschreibung*: Aktualisiert den Spielernamen
 * *Request Type*: `PUT`
 * *Path Variable*: Email `String`
-* *Request Body*: Neuer Name `String` 
+* *Request Body*: Neuer Name `String`
 * *Response Object*: Aktualisierter Spieler  `Player`
 * *HTTP Status*:
     * `OK` - falls erfolgreiche Aktualisierung
-    * `BAD_REQUEST` - falls neuer Name dem alten entspricht oder leere Zeichenkette
+    * `BAD_REQUEST` - falls neuer Name dem alten entspricht oder leere
+      Zeichenkette
 
-
-####<u>Team</u>
+#### <u>Team</u>
 
 **/api/teams**
 
@@ -170,7 +183,7 @@ Die REST API funktioniert als Schnittstelle, durch welche der Client auf die in 
 * *HTTP Status*:
     * `OK` - falls Anfrage erfolgreich
     * `NO_CONTENT` - falls keine Teams in der Datenbank vorhanden
-    
+
 **/api/teams/{name}**
 
 * *Beschreibung*: Gibt das Team Objekt anhand des Namens zurück
@@ -199,7 +212,8 @@ Die REST API funktioniert als Schnittstelle, durch welche der Client auf die in 
 * *Response Object*: Liste von Team-Objekten `List<Team>`
 * *HTTP Status*:
     * `OK` - falls Anfrage erfolgreich
-    * `NOT_FOUND` - falls Spieler mit der Email nicht existiert oder keine aktiven Teams besitzt
+    * `NOT_FOUND` - falls Spieler mit der Email nicht existiert oder keine
+      aktiven Teams besitzt
 
 **/api/teams/create**
 
@@ -225,45 +239,64 @@ Die REST API funktioniert als Schnittstelle, durch welche der Client auf die in 
 
 * *Beschreibung*: Aktualisiert die Team-Eigenschaften
 * *Request Type*: `PUT`
-* *Request Body*: Team-Name, Level, Punktestand, Leben und Aktivitätsstatus als `ObjectNode`
+* *Request Body*: Team-Name, Level, Punktestand, Leben und Aktivitätsstatus
+  als `ObjectNode`
 * *Response Object*: Team-Objekt `Team`
 * *HTTP Status*:
     * `CREATED` - falls erfolgreich aktualisiert
     * `NOT_FOUND` - falls Team nicht existiert
 
-###Socket
+### Socket
 
-Die Echtzeit-Kommunikation zwischen Client und Server erfolgt über Sockets. Sie erfüllt den Zweck, die Spielansicht beider Clients synchron zu halten.
+Die Echtzeit-Kommunikation zwischen Client und Server erfolgt über Sockets. Sie
+erfüllt den Zweck, die Spielansicht beider Clients synchron zu halten.
 
-Als Protokoll wird ein SocketRequest-Objekt benutzt, welches aus einem SocketRequestType und einem zugeordneten Wert besteht. Dieses wird vor der Übertragung zu einem String konvertiert. Es existieren sechs verschiedene SocketRequest-Typen:
+Als Protokoll wird ein SocketRequest-Objekt benutzt, welches aus einem
+SocketRequestType und einem zugeordneten Wert besteht. Dieses wird vor der
+Übertragung zu einem String konvertiert. Es existieren sechs verschiedene
+SocketRequest-Typen:
 
 **INIT**
-* *Beschreibung*: Ordnet serverseitig den Client-Thread anhand dessen Team in einen Pool von verbundenen Clients ein und informiert den Client des zweiten Spielers, ob ein Spiel begonnen werden kann.
+
+* *Beschreibung*: Ordnet serverseitig den Client-Thread anhand dessen Team in
+  einen Pool von verbundenen Clients ein und informiert den Client des zweiten
+  Spielers, ob ein Spiel begonnen werden kann.
 * *Payload*:
-  * Team-Name
+    * Team-Name
 
 **READY**
-* *Beschreibung*: Informiert einen Client darüber, ob der jeweils andere Spieler anwesend und bereit zum Spielen ist.
+
+* *Beschreibung*: Informiert einen Client darüber, ob der jeweils andere Spieler
+  anwesend und bereit zum Spielen ist.
 * *Payload*:
-  * `true` - falls der zweite Spieler sich auf dem Wartebildschirm eingefunden hat und das Spiel begonnen werden kann
-  * `false` - falls sich der zweite Spieler noch nicht auf dem Wartebildschirm eingefunden oder abgemeldet hat
+    * `true` - falls der zweite Spieler sich auf dem Wartebildschirm eingefunden
+      hat und das Spiel begonnen werden kann
+    * `false` - falls sich der zweite Spieler noch nicht auf dem Wartebildschirm
+      eingefunden oder abgemeldet hat
 
 **GAME_RUNNING**
-* *Beschreibung*: Informiert den zweiten Client über den Spielstatus des ersten Clients
+
+* *Beschreibung*: Informiert den zweiten Client über den Spielstatus des ersten
+  Clients
 * *Payload*:
-  * Spielstatus (`START`, `PAUSE`, `RESUME`, `CONTINUE`)
+    * Spielstatus (`START`, `PAUSE`, `RESUME`, `CONTINUE`)
 
 **MOVE**
+
 * *Beschreibung*: Synchronisiert die Bewegungen der Spieler für beide Clients
 * *Payload*:
-  * Bewegungsrichtung eines Spielers (`UP`, `LEFT`, `RIGHT`)
+    * Bewegungsrichtung eines Spielers (`UP`, `LEFT`, `RIGHT`)
 
 **THROW**
+
 * *Beschreibung*: Synchronisiert die Frisbee-Position beider Clients
 * *Payload*:
-  * Frisbee-Geschwindigkeit in X und Y Richtung
+    * Frisbee-Geschwindigkeit in X und Y Richtung
 
 **DISCONNECT**
-* *Beschreibung*: Bricht die Verbindung eines Clients ab, löscht den Client-Thread aus dem Pool der verbundenen Clients und informiert den Client des zweiten Spielers.
+
+* *Beschreibung*: Bricht die Verbindung eines Clients ab, löscht den
+  Client-Thread aus dem Pool der verbundenen Clients und informiert den Client
+  des zweiten Spielers.
 * *Payload*:
-  * true
+    * true
