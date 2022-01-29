@@ -7,7 +7,7 @@ Semesterprojekt https://github.com/wernerbreitenstein/Patterns-and-Frameworks
 
 Die Backend Applikation ist auf einem Server deployed und läuft in Docker 
 Containern (siehe `src/docker-compose.yml`). Für die lokale Entwicklung 
-müssen die application properties entsprechend angepasst werden. 
+müssen die `application.properties` entsprechend angepasst werden. 
 
 # Development
 
