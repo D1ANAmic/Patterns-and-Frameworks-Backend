@@ -3,6 +3,12 @@
 Spring Boot Backend für das
 Semesterprojekt https://github.com/wernerbreitenstein/Patterns-and-Frameworks
 
+# Produktivsystem
+
+Die Backend Applikation ist auf einem Server deployed und läuft in Docker 
+Containern (siehe `src/docker-compose.yml`). Für die lokale Entwicklung 
+müssen die application properties entsprechend angepasst werden. 
+
 # Development
 
 ## Voraussetzungen
@@ -261,4 +267,3 @@ Als Protokoll wird ein SocketRequest-Objekt benutzt, welches aus einem SocketReq
 * *Beschreibung*: Bricht die Verbindung eines Clients ab, löscht den Client-Thread aus dem Pool der verbundenen Clients und informiert den Client des zweiten Spielers.
 * *Payload*:
   * true
-
